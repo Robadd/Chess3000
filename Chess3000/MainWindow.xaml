@@ -7,20 +7,23 @@
         xmlns:Custom="http://schemas.microsoft.com/surface/2008" x:Class="Chess3000.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid Name="mainGrid">
+    <Grid Name="mainGrid" Margin="0,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="100*" Name="BoardHeight"/>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="{Binding ElementName=mainGrid,Path=ActualHeight}"/>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="{Binding ElementName=boardCanvas,Path=ActualHeight}"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="10*"/>
         </Grid.ColumnDefinitions>
 
 
-        <Custom:TagVisualizerCanvas Margin="0" Name="TVC">
-            <Custom:TagVisualizer Name="board" Height="{Binding ElementName=TVC,Path=ActualHeight}" Width="{Binding ElementName=TVC,Path=ActualWidth}">
-
-            </Custom:TagVisualizer>
-        </Custom:TagVisualizerCanvas>
-        <Grid Grid.Column="1" Name="boardCanvas">
+        
+        <Grid Grid.Row="1" Grid.Column="2" Name="boardCanvas" Margin="0,0,0,0" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
@@ -41,12 +44,76 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-
-            <Rectangle Grid.ColumnSpan="8" Grid.Column="0" Grid.Row="0" Grid.RowSpan="8" Stroke="Black" StrokeThickness="2"/>
-            <Custom:TagVisualizerCanvas Name="tagCanvas" Grid.ColumnSpan="8" Grid.RowSpan="8" />
-
+            <Custom:TagVisualizerCanvas Margin="0,0,0,0" Name="TVC" Grid.ColumnSpan="8" Grid.RowSpan="8"/>
         </Grid>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="22,103,0,0" TextWrapping="Wrap" Name="textblock" VerticalAlignment="Top" Width="73" Height="107"/>
+        <TextBlock Grid.Column="4" Text="White player" TextWrapping="Wrap" Name="player1" RenderTransformOrigin="0.5,0.5" Margin="0,0,-2,0" Grid.Row="1" TextAlignment="Center" >
+            <TextBlock.LayoutTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-90"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBlock.LayoutTransform>
+        </TextBlock>
+        <TextBlock Grid.Column="0" Text="Black player" TextWrapping="Wrap" Name="player2" RenderTransformOrigin="0.5,0.5" Margin="0" Grid.Row="1" TextAlignment="Center" >
+            <TextBlock.LayoutTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="90"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBlock.LayoutTransform>
+        </TextBlock>
+        <Grid Grid.Column="2" Name="LabelRight">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <Grid Grid.Column="2" Grid.Row="2" Name="LabelLeft">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <Grid Grid.Column="1" Grid.Row="1" Name="LabelBlack">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+        </Grid>
+        <Grid Grid.Column="3" Grid.Row="1" Name="LabelWhite">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+        </Grid>
     </Grid>
 
 
