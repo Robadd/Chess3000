@@ -44,7 +44,7 @@ namespace Chess3000
 
         private void FillBoardWithSquares()
         {
-            Collection<TagVisualizationDefinition> dc = VisDefinitions(32);
+            Collection<TagVisualizationDefinition> dc = CreateVisualizerDefinitions(32);
 
             for (int i = 0; i < 8; i++)
             {
@@ -56,17 +56,8 @@ namespace Chess3000
                     else rect.Fill = new SolidColorBrush(Colors.White);
                     rect.SetValue(Grid.RowProperty, i);
                     rect.SetValue(Grid.ColumnProperty, j);
-                    
-                    // Tag Visualizer
-                    TagVisualizer tv = new TagVisualizer();
-                    tv.Height = boardCanvas.ActualHeight / 8;
-                    tv.Width = boardCanvas.ActualWidth / 8;
-                    tv.SetValue(Grid.RowProperty, i);
-                    tv.SetValue(Grid.ColumnProperty, j);
-                    tv.VisualizationAdded += VisAdded;
-                    tv.VisualizationRemoved += VisRemoved;
-                    tv.Definitions.Clear();
-                    tv.Definitions.Concat(dc);
+
+                    TagVisualizer tv = CreateVisualizer(i, j, dc);
 
                     // Add to view
                     boardCanvas.Children.Add(rect);
@@ -136,7 +127,7 @@ namespace Chess3000
             }
         }
 
-        private Collection<TagVisualizationDefinition> VisDefinitions(int count)
+        private Collection<TagVisualizationDefinition> CreateVisualizerDefinitions(int count)
         {
             Collection<TagVisualizationDefinition> dc = new Collection<TagVisualizationDefinition>();
             for (int i = 0; i < count; i++)
@@ -146,6 +137,20 @@ namespace Chess3000
                 dc.Add(td);
             }
             return dc;
+        }
+
+        private TagVisualizer CreateVisualizer(int x, int y, Collection<TagVisualizationDefinition> dc)
+        {
+            TagVisualizer tv = new TagVisualizer();
+            tv.Height = boardCanvas.ActualHeight / 8;
+            tv.Width = boardCanvas.ActualWidth / 8;
+            tv.SetValue(Grid.RowProperty, x);
+            tv.SetValue(Grid.ColumnProperty, y);
+            tv.VisualizationAdded += VisAdded;
+            tv.VisualizationRemoved += VisRemoved;
+            tv.Definitions.Clear();
+            tv.Definitions.Concat(dc);
+            return tv;
         }
     }
 }
