@@ -70,8 +70,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ChessMaster.cs" />
+    <Compile Include="Dame.cs" />
     <Compile Include="Feld.cs" />
+    <Compile Include="Koenig.cs" />
+    <Compile Include="Laeufer.cs" />
     <Compile Include="Pos.cs" />
+    <Compile Include="Springer.cs" />
+    <Compile Include="Turm.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

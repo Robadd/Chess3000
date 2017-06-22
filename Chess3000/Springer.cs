@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Chess3000
 {
-    public class Bauer : Figur
+    class Springer : Figur
     {
-        public Bauer(Farbe farbe) : base(farbe)
+        public Springer(Farbe farbe) : base(farbe)
         {
         }
 

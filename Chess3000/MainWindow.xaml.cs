@@ -22,6 +22,7 @@ namespace Chess3000
     {
         public MainWindow()
         {
+            ChessMaster master = new ChessMaster();
             InitializeComponent();
         }
     }
