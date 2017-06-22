@@ -20,8 +20,9 @@ namespace Chess3000
     /// <summary>
     /// Interaktionslogik für MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : SurfaceWindow
     {
+        public Collection<TagVisualizer> tvcollection = new Collection<TagVisualizer>();
         public MainWindow()
         {
             InitializeComponent();
@@ -33,8 +34,8 @@ namespace Chess3000
         {
             int x, y;
             y = (int)((Control)sender).GetValue(Grid.RowProperty);
-            x = (int)((Control)sender).GetValue(Grid.RowProperty);
-            player1.Text = "x:" + x + " y:" + y;
+            x = (int)((Control)sender).GetValue(Grid.ColumnProperty);
+            player1.Text = "Tag:" + "x:" + x + " y:" + y;
         }
 
         private void VisRemoved(object sender, TagVisualizerEventArgs e)
@@ -44,8 +45,16 @@ namespace Chess3000
 
         private void FillBoardWithSquares()
         {
+            Rectangle border = new Rectangle();
+            border.SetValue(Grid.RowProperty, 0);
+            border.SetValue(Grid.ColumnProperty, 0);
+            border.SetValue(Grid.RowSpanProperty, 8);
+            border.SetValue(Grid.ColumnSpanProperty, 8);
+            border.Stroke = Brushes.Black;
+            border.StrokeThickness = 2;
+            boardCanvas.Children.Add(border);
             Collection<TagVisualizationDefinition> dc = CreateVisualizerDefinitions(32);
-
+            
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
@@ -58,21 +67,14 @@ namespace Chess3000
                     rect.SetValue(Grid.ColumnProperty, j);
 
                     TagVisualizer tv = CreateVisualizer(i, j, dc);
-
+                    tvcollection.Add(tv);
                     // Add to view
                     boardCanvas.Children.Add(rect);
-                    TVC.Children.Add(tv);
+                    boardCanvas.Children.Add(tv);
                 }
             }
             // Make Border of Chessboard
-            Rectangle border = new Rectangle();
-            border.SetValue(Grid.RowProperty, 0);
-            border.SetValue(Grid.ColumnProperty, 0);
-            border.SetValue(Grid.RowSpanProperty, 8);
-            border.SetValue(Grid.ColumnSpanProperty, 8);
-            border.Stroke = Brushes.Black;
-            border.StrokeThickness = 2;
-            boardCanvas.Children.Add(border);
+            
         }
 
         private void AddNotationLabels()
@@ -134,6 +136,7 @@ namespace Chess3000
             {
                 TagVisualizationDefinition td = new TagVisualizationDefinition();
                 td.Value = i;
+                td.LostTagTimeout = 200;
                 dc.Add(td);
             }
             return dc;
@@ -142,15 +145,27 @@ namespace Chess3000
         private TagVisualizer CreateVisualizer(int x, int y, Collection<TagVisualizationDefinition> dc)
         {
             TagVisualizer tv = new TagVisualizer();
-            tv.Height = boardCanvas.ActualHeight / 8;
-            tv.Width = boardCanvas.ActualWidth / 8;
             tv.SetValue(Grid.RowProperty, x);
             tv.SetValue(Grid.ColumnProperty, y);
+            tv.VerticalAlignment = VerticalAlignment.Stretch;
+            tv.HorizontalAlignment = HorizontalAlignment.Stretch;
             tv.VisualizationAdded += VisAdded;
             tv.VisualizationRemoved += VisRemoved;
-            tv.Definitions.Clear();
-            tv.Definitions.Concat(dc);
+            foreach(TagVisualizationDefinition foo in dc)
+            {
+                tv.Definitions.Add(foo);
+            }
             return tv;
+        }
+
+        private void Board_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            
+        }
+
+        private void TagVisualizer_VisualizationAdded(object sender, TagVisualizerEventArgs e)
+        {
+            return;
         }
     }
 }
