@@ -10,17 +10,64 @@ namespace Chess3000
 
     public abstract class Figur
     {
-        public Figur( Chess3000.Farbe farbe )
+        public Figur(Chess3000.Farbe farbe, Feld feld, ChessMaster ChessMaster)
         {
             this.farbe = new Chess3000.Farbe();
             this.farbe = farbe;
+            this.feld = feld;
+            this.master = ChessMaster;
 
             moeglicheZiele = new List<Pos>();
         }
 
         abstract public void updatePosDes();
 
-        private Chess3000.Farbe farbe;
-        private List<Pos> moeglicheZiele;
+        //Rückgabe --> soll es weitergehen?
+        protected bool addToPosDes(Pos pos)
+        {
+            if (master.getFigur(pos) == null)
+            {
+                moeglicheZiele.Add(pos);
+                return true;
+            }
+            else
+            {
+                if (master.getFigur(pos).Farbe != this.Farbe)
+                {
+                    moeglicheZiele.Add(pos);
+                }
+                return false;
+            }
+        }
+
+
+        public Chess3000.Farbe Farbe
+        {
+            get { return farbe; }
+        }
+
+        protected Pos Pos
+        {
+            get { return feld.Koordinate; }
+        }
+
+        public Feld Feld
+        {
+            get { return feld; }
+            set
+            {
+                if ( value != null )
+                {
+                    feld = value;
+                }
+            }
+        }
+
+        protected Chess3000.Farbe farbe;
+        protected List<Pos> moeglicheZiele;
+        protected Feld feld;
+        protected ChessMaster master;
+
     }
+
 }

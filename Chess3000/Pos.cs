@@ -10,8 +10,8 @@ namespace Chess3000
     {
         public Pos( int y_val, int x_val)
         {
-            x = x_val;
             y = y_val;
+            x = x_val;
         }
 
         public int x
@@ -19,7 +19,7 @@ namespace Chess3000
             get { return _x; }
             set
             {
-                if (value < 8 && value >= 0)
+                if (value <= 7 && value >= 0)
                 {
                     _x = value;
                 }
@@ -30,14 +30,14 @@ namespace Chess3000
             get { return _y; }
             set
             {
-                if (value < 8 && value >= 0)
+                if (value <= 7 && value >= 0)
                 {
                     _y = value;
                 }
             }
         }
 
-        private int _x = 0;
-        private int _y = 0;
+        private int _y = -1;
+        private int _x = -1;
     }
 }

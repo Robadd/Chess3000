@@ -20,6 +20,11 @@ namespace Chess3000
             set { m_figur = value; }
         }
 
+        public Pos Koordinate
+        {
+            get { return m_koordinate; }
+        }
+
         private Pos m_koordinate;
         private Figur m_figur;
     }
