@@ -64,6 +64,11 @@ namespace Chess3000
             }
         }
 
+        public List<Pos> PosDes
+        {
+            get { return PosDes; }
+        }
+
         public string PosDesString
         {
             get

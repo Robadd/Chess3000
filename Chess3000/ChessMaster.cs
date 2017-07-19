@@ -353,15 +353,30 @@ namespace Chess3000
         bool check(Chess3000.Farbe kingColor)
         {
             Pos kingPos = getKingPosition(kingColor);
-            //Chess3000.Farbe enemyColor = (kingColor == Farbe.WEISS ? Farbe.SCHWARZ : Farbe.WEISS);
+            Chess3000.Farbe enemyColor = (kingColor == Farbe.WEISS ? Farbe.SCHWARZ : Farbe.WEISS);
 
+            /*
             bishopCheck(kingPos, kingColor);
             rookCheck(kingPos, kingColor);
             queenCheck(kingPos, kingColor);
             knightCheck(kingPos, kingColor);
+            */
+
+            for (int y = 0; y <= 7; y++)
+            {
+                foreach (Feld feld in m_schachbrett[y])
+                {
+                    if (feld.figur != null && feld.figur.Farbe == enemyColor)
+                    {
+                        foreach (Pos pos in feld.figur.PosDes)
+                        {
+                            if (pos == kingPos) { return true; }
+                        }
+                    }
+                }
+            }
 
             return false;
-
         }
 
         //Momentan noch ohne Prüfung, zum Testen!
