@@ -74,11 +74,12 @@ namespace Chess3000
         }
         
         //Momentan noch ohne Prüfung, zum Testen!
-        void move( Pos from, Pos to)
+        bool move( Pos from, Pos to)
         {
             m_schachbrett[to.y][to.x].figur = m_schachbrett[from.y][from.x].figur;
             m_schachbrett[to.y][to.x].figur.Feld = m_schachbrett[to.y][to.x];
             m_schachbrett[from.y][from.x].figur = null;
+            return true;
         }
 
         public Figur getFigur( Pos pos )
