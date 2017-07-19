@@ -19,8 +19,9 @@ namespace Chess3000
             //           move(new Pos(6, 6), new Pos(4, 6));
             //           move(new Pos(1, 4), new Pos(2, 4));
             //            move(new Pos(1, 1), new Pos(5, 1));
-//            move(new Pos(0, 4), new Pos(2, 7));
-//            m_schachbrett[2][7].figur.updatePosDes();
+            //            move(new Pos(0, 4), new Pos(2, 7));
+            //            m_schachbrett[2][7].figur.updatePosDes();
+            updatePossibleDestinations();
         }
 
         private void createInitialBoardState()
@@ -70,9 +71,299 @@ namespace Chess3000
 
         private void updatePossibleDestinations()
         {
+            //Debug
+            Console.WriteLine("********************************************************");
+            for (int y = 0; y <= 7; y++)
+            {
+                foreach (Feld feld in m_schachbrett[y])
+                {
+                    if (feld.figur != null)
+                    {
+                        feld.figur.updatePosDes();
 
+                        //Debug
+                        Console.WriteLine("Figur: " + feld.figur.PieceType.ToString());
+                        Console.WriteLine("Farbe: " + feld.figur.Farbe.ToString());
+                        Console.WriteLine("Position: " + feld.figur.currentPosString);
+                        Console.WriteLine("Mögliche Ziele:");
+                        Console.WriteLine(feld.figur.PosDesString);
+                        Console.WriteLine("");
+                    }
+                }
+            }
         }
         
+        Pos getKingPosition( Chess3000.Farbe player)
+        {
+            Pos kingPos = new Pos(-1,-1);
+            for (int y = 0; y <= 7; y++)
+            {
+                foreach (Feld feld in m_schachbrett[y])
+                {
+                    if (feld.figur != null && feld.figur.PieceType == PieceType.Koenig && feld.figur.Farbe == player)
+                    {
+                        kingPos = feld.Koordinate;
+                    }
+                }
+            }
+            return kingPos;
+        }
+
+        bool foundPiece(Chess3000.Farbe color, Chess3000.PieceType pieceType, Pos currentPos)
+        {
+            Figur figur = getFigur(new Pos(currentPos.y, currentPos.x));
+            return (
+                figur != null &&
+                figur.Farbe == color &&
+                figur.PieceType == pieceType
+                );
+        }
+
+        bool bishopCheck(Pos kingPos, Farbe kingColor)
+        {
+            for (int y = kingPos.y + 1, x = kingPos.x + 1; y <= 7 && x <= 7; y++, x++)
+            {
+                Figur figur = getFigur(new Pos(y, x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Laeufer) { return true; }
+            }
+
+            for (int y = kingPos.y - 1, x = kingPos.x - 1; y >= 0 && x >= 0; y--, x--)
+            {
+                Figur figur = getFigur(new Pos(y, x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Laeufer) { return true; }
+            }
+
+            for (int y = kingPos.y + 1, x = kingPos.x - 1; y <= 7 && x >= 0; y++, x--)
+            {
+                Figur figur = getFigur(new Pos(y, x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Laeufer) { return true; }
+            }
+
+            for (int y = kingPos.y - 1, x = kingPos.x + 1; y >= 0 && x <= 7; y--, x++)
+            {
+                Figur figur = getFigur(new Pos(y, x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Laeufer) { return true; }
+            }
+
+            return false;
+        }
+
+
+        bool rookCheck(Pos kingPos, Farbe kingColor)
+        {
+            for (int y = kingPos.y + 1; y <= 7; y++)
+            {
+                Figur figur = getFigur(new Pos(y, kingPos.x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Turm) { return true; }
+            }
+
+            for (int y = kingPos.y - 1; y >= 0; y--)
+            {
+                Figur figur = getFigur(new Pos(y, kingPos.x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Turm) { return true; }
+            }
+
+            for (int x = kingPos.x + 1; x <= 7; x++)
+            {
+                Figur figur = getFigur(new Pos(kingPos.y, x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Turm) { return true; }
+            }
+
+            for (int x = kingPos.x - 1; x >= 0; x--)
+            {
+                Figur figur = getFigur(new Pos(kingPos.y, x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Turm) { return true; }
+            }
+
+            return false;
+        }
+
+        bool queenCheck(Pos kingPos, Farbe kingColor)
+        {
+            for (int y = kingPos.y + 1, x = kingPos.x + 1; y <= 7 && x <= 7; y++, x++)
+            {
+                Figur figur = getFigur(new Pos(y, x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Dame) { return true; }
+            }
+
+            for (int y = kingPos.y - 1, x = kingPos.x - 1; y >= 0 && x >= 0; y--, x--)
+            {
+                Figur figur = getFigur(new Pos(y, x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Dame) { return true; }
+            }
+
+            for (int y = kingPos.y + 1, x = kingPos.x - 1; y <= 7 && x >= 0; y++, x--)
+            {
+                Figur figur = getFigur(new Pos(y, x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Dame) { return true; }
+            }
+
+            for (int y = kingPos.y - 1, x = kingPos.x + 1; y >= 0 && x <= 7; y--, x++)
+            {
+                Figur figur = getFigur(new Pos(y, x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Dame) { return true; }
+            }
+
+            for (int y = kingPos.y + 1; y <= 7; y++)
+            {
+                Figur figur = getFigur(new Pos(y, kingPos.x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Dame) { return true; }
+            }
+
+            for (int y = kingPos.y - 1; y >= 0; y--)
+            {
+                Figur figur = getFigur(new Pos(y, kingPos.x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Dame) { return true; }
+            }
+
+            for (int x = kingPos.x + 1; x <= 7; x++)
+            {
+                Figur figur = getFigur(new Pos(kingPos.y, x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Dame) { return true; }
+            }
+
+            for (int x = kingPos.x - 1; x >= 0; x--)
+            {
+                Figur figur = getFigur(new Pos(kingPos.y, x));
+                if (figur == null) { continue; }
+                else if (figur.Farbe == kingColor) { break; }
+                else if (figur.PieceType == PieceType.Dame) { return true; }
+            }
+
+            return false;
+        }
+
+        bool knightCheck(Pos kingPos, Farbe kingColor)
+        {
+            Chess3000.Farbe enemyColor = (kingColor == Farbe.WEISS ? Farbe.SCHWARZ : Farbe.WEISS);
+
+            int y = kingPos.y + 2;
+            int x = kingPos.x + 1;
+            if (y <= 7 && x <= 7)
+            {
+                if (foundPiece(enemyColor, PieceType.Springer, kingPos))
+                {
+                    return true;
+                }
+            }
+
+            y = kingPos.y + 2;
+            x = kingPos.x - 1;
+            if (y <= 7 && x >= 0)
+            {
+                if (foundPiece(enemyColor, PieceType.Springer, kingPos))
+                {
+                    return true;
+                }
+            }
+
+            y = kingPos.y - 2;
+            x = kingPos.x - 1;
+            if (y >= 0 && x >= 0)
+            {
+                if (foundPiece(enemyColor, PieceType.Springer, kingPos))
+                {
+                    return true;
+                }
+            }
+
+            y = kingPos.y - 2;
+            x = kingPos.x + 1;
+            if (y >= 0 && x <= 7)
+            {
+                if (foundPiece(enemyColor, PieceType.Springer, kingPos))
+                {
+                    return true;
+                }
+            }
+
+            y = kingPos.y + 1;
+            x = kingPos.x + 2;
+            if (y <= 7 && x <= 7)
+            {
+                if (foundPiece(enemyColor, PieceType.Springer, kingPos))
+                {
+                    return true;
+                }
+            }
+
+            y = kingPos.y - 1;
+            x = kingPos.x + 2;
+            if (y >= 0 && x <= 7)
+            {
+                if (foundPiece(enemyColor, PieceType.Springer, kingPos))
+                {
+                    return true;
+                }
+            }
+
+            y = kingPos.y - 1;
+            x = kingPos.x - 2;
+            if (y >= 0 && x >= 0)
+            {
+                if (foundPiece(enemyColor, PieceType.Springer, kingPos))
+                {
+                    return true;
+                }
+            }
+
+            y = kingPos.y + 1;
+            x = kingPos.x - 2;
+            if (y <= 7 && x >= 0)
+            {
+                if (foundPiece(enemyColor, PieceType.Springer, kingPos))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        bool check(Chess3000.Farbe kingColor)
+        {
+            Pos kingPos = getKingPosition(kingColor);
+            //Chess3000.Farbe enemyColor = (kingColor == Farbe.WEISS ? Farbe.SCHWARZ : Farbe.WEISS);
+
+            bishopCheck(kingPos, kingColor);
+            rookCheck(kingPos, kingColor);
+            queenCheck(kingPos, kingColor);
+            knightCheck(kingPos, kingColor);
+
+            return false;
+
+        }
+
         //Momentan noch ohne Prüfung, zum Testen!
         bool move( Pos from, Pos to)
         {

@@ -10,6 +10,7 @@ namespace Chess3000
     {
         public Turm(Farbe farbe, Feld feld, ChessMaster ChessMaster) : base(farbe, feld, ChessMaster)
         {
+            pieceType = Chess3000.PieceType.Turm;
         }
 
         public override void updatePosDes()

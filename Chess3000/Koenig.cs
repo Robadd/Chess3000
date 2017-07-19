@@ -10,6 +10,7 @@ namespace Chess3000
     {
         public Koenig(Farbe farbe, Feld feld, ChessMaster ChessMaster) : base(farbe, feld, ChessMaster)
         {
+            pieceType = Chess3000.PieceType.Koenig;
         }
 
         public override void updatePosDes()

@@ -10,6 +10,7 @@ namespace Chess3000
     {
         public Laeufer(Farbe farbe, Feld feld, ChessMaster ChessMaster) : base(farbe, feld, ChessMaster)
         {
+            pieceType = Chess3000.PieceType.Laeufer;
         }
 
         public override void updatePosDes()

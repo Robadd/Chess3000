@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Chess3000
 {
     public enum Farbe { WEISS, SCHWARZ };
+    public enum PieceType { Bauer, Turm, Springer, Laeufer, Dame, Koenig };
 
     public abstract class Figur
     {
@@ -63,10 +64,40 @@ namespace Chess3000
             }
         }
 
+        public string PosDesString
+        {
+            get
+            {
+                string posDes = "";
+                foreach (Pos des in moeglicheZiele)
+                {
+                    posDes += "(y, x): (" + des.y + ", " + des.x + ")\n";
+                }
+                return posDes;
+            }
+        }
+
         protected Chess3000.Farbe farbe;
         protected List<Pos> moeglicheZiele;
         protected Feld feld;
         protected ChessMaster master;
+        protected PieceType pieceType;
+
+        public string currentPosString
+        {
+            get
+            {
+                return "(" + feld.Koordinate.y + ", " + feld.Koordinate.x + ")";
+            }
+        }
+
+        public PieceType PieceType
+        {
+            get
+            {
+                return pieceType;
+            }
+        }
 
     }
 

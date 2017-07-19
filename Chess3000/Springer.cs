@@ -10,6 +10,7 @@ namespace Chess3000
     {
         public Springer(Farbe farbe, Feld feld, ChessMaster ChessMaster) : base(farbe, feld, ChessMaster)
         {
+            pieceType = Chess3000.PieceType.Springer;
         }
 
         public override void updatePosDes()
