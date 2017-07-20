@@ -30,7 +30,7 @@ namespace Chess3000
         {
             master = new ChessMaster();
             InitializeComponent();
-            FillBoardWithSquares();
+           // FillBoardWithSquares();
             AddNotationLabels();
             for (int x = 0; x < 8; x++)
             {
