@@ -85,9 +85,16 @@
     <Compile Include="Feld.cs" />
     <Compile Include="Koenig.cs" />
     <Compile Include="Laeufer.cs" />
+    <Compile Include="TestWindow.xaml.cs">
+      <DependentUpon>TestWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pos.cs" />
     <Compile Include="Springer.cs" />
     <Compile Include="Turm.cs" />
+    <Page Include="TestWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

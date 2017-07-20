@@ -15,6 +15,8 @@ namespace Chess3000
 
         public override void updatePosDes()
         {
+            moeglicheZiele.Clear();
+
             if (Farbe == Chess3000.Farbe.WEISS)
             {
                 int y = Pos.y + 1;

@@ -6,22 +6,45 @@ using System.Threading.Tasks;
 
 namespace Chess3000
 {
+
+    public enum Result {
+        SUCCESS,
+        ERROR_CHECK,
+        ERROR_CHECK_UNHANDLED,
+        ERROR_NULL_PIECE,
+        ERROR_INVALID_DES,
+        ERROR_WRONG_COLOR
+    };
+
     public class ChessMaster
     {
         Feld[][] m_schachbrett;
+        Chess3000.Farbe drawing = Farbe.WEISS;
 
         public ChessMaster()
         {
-            createInitialBoardState();
-
             //Test
-            //            move(new Pos(1, 1), new Pos(2, 1));
-            //           move(new Pos(6, 6), new Pos(4, 6));
-            //           move(new Pos(1, 4), new Pos(2, 4));
-            //            move(new Pos(1, 1), new Pos(5, 1));
-            //            move(new Pos(0, 4), new Pos(2, 7));
-            //            m_schachbrett[2][7].figur.updatePosDes();
+            Console.BufferHeight = Int16.MaxValue - 1;
+            createInitialBoardState();
             updatePossibleDestinations();
+            Result res;
+            Console.WriteLine("#####################");
+            res = move(new Pos(1, 3), new Pos(2, 3));
+            Console.WriteLine(res.ToString());
+            res = move(new Pos(6, 4), new Pos(5, 4));
+            Console.WriteLine(res.ToString());
+            res = move(new Pos(1, 0), new Pos(2, 0));
+            Console.WriteLine(res.ToString());
+            res = move(new Pos(7, 5), new Pos(3, 1));
+            Console.WriteLine(res.ToString());
+            res = move(new Pos(0, 4), new Pos(1, 3));
+            Console.WriteLine(res.ToString());
+            Console.WriteLine("#####################");
+        }
+
+        public Chess3000.Farbe Drawing
+        {
+            get { return drawing; }
         }
 
         private void createInitialBoardState()
@@ -132,7 +155,8 @@ namespace Chess3000
                     {
                         foreach (Pos pos in feld.figur.PosDes)
                         {
-                            if (pos == kingPos) { return true; }
+                            //Equals() != ==-Operator
+                            if (pos.Equals(kingPos)) { return true; }
                         }
                     }
                 }
@@ -141,18 +165,47 @@ namespace Chess3000
             return false;
         }
 
-        //Momentan noch ohne Prüfung, zum Testen!
-        bool move( Pos from, Pos to)
+        public Chess3000.Result move( Pos from, Pos to)
         {
-            m_schachbrett[to.y][to.x].figur = m_schachbrett[from.y][from.x].figur;
-            m_schachbrett[to.y][to.x].figur.Feld = m_schachbrett[to.y][to.x];
-            m_schachbrett[from.y][from.x].figur = null;
-            return true;
+            Figur piece = getFigur(from);
+
+            if (piece == null) { return Result.ERROR_NULL_PIECE; }
+            else if (piece.Farbe != drawing) { return Result.ERROR_WRONG_COLOR; }
+            else if (!piece.validDes(to)) { return Result.ERROR_INVALID_DES; }
+            else
+            {
+                Figur fromPiece = m_schachbrett[from.y][from.x].figur;
+                Figur toPiece = m_schachbrett[to.y][to.x].figur;
+
+                m_schachbrett[to.y][to.x].figur = m_schachbrett[from.y][from.x].figur;
+                m_schachbrett[to.y][to.x].figur.Feld = m_schachbrett[to.y][to.x];
+                m_schachbrett[from.y][from.x].figur = null;
+                updatePossibleDestinations();
+
+                if (check(drawing))
+                {
+                    //Änderungen rückgängig machen
+                    m_schachbrett[from.y][from.x].figur = fromPiece;
+                    m_schachbrett[from.y][from.x].figur.Feld = m_schachbrett[from.y][from.x];
+                    m_schachbrett[to.y][to.x].figur = toPiece;
+                    updatePossibleDestinations();
+
+                    return Result.ERROR_CHECK;
+                }
+
+                endDraw();
+                return Result.SUCCESS;
+            }
         }
 
         public Figur getFigur( Pos pos )
         {
             return m_schachbrett[pos.y][pos.x].figur;
+        }
+
+        private void endDraw()
+        {
+            drawing = (drawing == Farbe.WEISS ? Farbe.SCHWARZ : Farbe.WEISS);
         }
     }
 }

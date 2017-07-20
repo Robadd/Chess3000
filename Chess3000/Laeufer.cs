@@ -15,6 +15,7 @@ namespace Chess3000
 
         public override void updatePosDes()
         {
+            moeglicheZiele.Clear();
 
             for (int y = Pos.y + 1, x = Pos.x + 1; y <= 7 && x <= 7; y++, x++)
             {

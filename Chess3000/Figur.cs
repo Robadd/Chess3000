@@ -66,7 +66,7 @@ namespace Chess3000
 
         public List<Pos> PosDes
         {
-            get { return PosDes; }
+            get { return moeglicheZiele; }
         }
 
         public string PosDesString
@@ -76,10 +76,15 @@ namespace Chess3000
                 string posDes = "";
                 foreach (Pos des in moeglicheZiele)
                 {
-                    posDes += "(y, x): (" + des.y + ", " + des.x + ")\n";
+                    posDes += "(y,x): (" + des.ToString() + ")\n";
                 }
                 return posDes;
             }
+        }
+
+        public bool validDes(Pos des)
+        {
+            return moeglicheZiele.Contains(des);
         }
 
         protected Chess3000.Farbe farbe;
@@ -92,7 +97,7 @@ namespace Chess3000
         {
             get
             {
-                return "(" + feld.Koordinate.y + ", " + feld.Koordinate.x + ")";
+                return "(" + feld.Koordinate.ToString() + ")";
             }
         }
 
