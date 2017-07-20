@@ -23,25 +23,68 @@ namespace Chess3000
     public partial class MainWindow : SurfaceWindow
     {
         public Collection<TagVisualizer> tvcollection = new Collection<TagVisualizer>();
+        private ChessMaster master;
+        private bool[,] AddedPieces = new bool[8,8];
+
         public MainWindow()
         {
-            ChessMaster master = new ChessMaster();
+            master = new ChessMaster();
             InitializeComponent();
             FillBoardWithSquares();
             AddNotationLabels();
+            for (int x = 0; x < 8; x++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    AddedPieces[x, y] = false;
+                }
+            }
+        }
+
+
+
+        private int AddedPiecesCount()
+        {
+            int count = 0;
+            for(int x = 0; x < 8; x++)
+            {
+                for(int y = 0; y < 8; y++)
+                {
+                    if (AddedPieces[x, y]) count++;
+                }
+            }
+            return count;
         }
 
         private void VisAdded(object sender, TagVisualizerEventArgs e)
         {
-            int x, y;
-            y = 7 - (int)((Control)sender).GetValue(Grid.RowProperty);
-            x = 7 - (int)((Control)sender).GetValue(Grid.ColumnProperty);
-            player1.Text = "Tag:" + "x:" + x + " y:" + y;
+            int xMaster, yMaster, xView, yView;
+            yView = (int)((Control)sender).GetValue(Grid.RowProperty);
+            xView = (int)((Control)sender).GetValue(Grid.ColumnProperty);
+            xMaster = 7 - xView;
+            yMaster = 7 - yView;
+            AddedPieces[xView, yView] = true;
+            if (AddedPiecesCount() == 32)
+            {
+                Grid.SetZIndex(StartBtn, 99);
+                StartBtn.Visibility = Visibility.Visible;
+                StartBtn.IsEnabled = true;
+            }
+            player1.Text = "Tag:" + "x:" + xMaster + " y:" + yMaster;
+            player2.Text = "Added Pieces: " + AddedPiecesCount();
         }
 
         private void VisRemoved(object sender, TagVisualizerEventArgs e)
         {
+            int xMaster, yMaster, xView, yView;
+            yView = (int)((Control)sender).GetValue(Grid.RowProperty);
+            xView = (int)((Control)sender).GetValue(Grid.ColumnProperty);
+            xMaster = 7 - xView;
+            yMaster = 7 - yView;
+            AddedPieces[xView, yView] = true;
             player1.Text = "";
+            player2.Text = "Added Pieces: " + AddedPiecesCount();
+
         }
 
         private void FillBoardWithSquares()
