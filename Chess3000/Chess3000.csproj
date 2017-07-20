@@ -141,8 +141,20 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="images\" />
+    <Resource Include="images\bauerSchwarz.png" />
+    <Resource Include="images\bauerWeiss.png" />
+    <Resource Include="images\dameSchwarz.png" />
+    <Resource Include="images\dameWeiss.png" />
+    <Resource Include="images\koenigSchwarz.png" />
+    <Resource Include="images\koenigWeiss.png" />
+    <Resource Include="images\laeuferSchwarz.png" />
+    <Resource Include="images\laeuferWeiss.png" />
+    <Resource Include="images\springerSchwarz.png" />
+    <Resource Include="images\springerWeiss.png" />
+    <Resource Include="images\turmSchwarz.png" />
+    <Resource Include="images\turmWeiss.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

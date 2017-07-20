@@ -49,6 +49,30 @@
             <Image x:Name="sl2" Grid.Column="0" Grid.Row="5" Source="images/laeuferSchwarz.png" Grid.ZIndex="98"/>
             <Image x:Name="ss2" Grid.Column="0" Grid.Row="6" Source="images/springerSchwarz.png" Grid.ZIndex="98"/>
             <Image x:Name="st2" Grid.Column="0" Grid.Row="7" Source="images/turmSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="sb1" Grid.Column="1" Grid.Row="0" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="sb2" Grid.Column="1" Grid.Row="1" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="sb3" Grid.Column="1" Grid.Row="2" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="sb4" Grid.Column="1" Grid.Row="3" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="sb5" Grid.Column="1" Grid.Row="4" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="sb6" Grid.Column="1" Grid.Row="5" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="sb7" Grid.Column="1" Grid.Row="6" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="sb8" Grid.Column="1" Grid.Row="7" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="wt1" Grid.Column="7" Grid.Row="0" Source="images/turmWeiss.png" Grid.ZIndex="98"/>
+            <Image x:Name="ws1" Grid.Column="7" Grid.Row="1" Source="images/springerWeiss.png" Grid.ZIndex="98"/>
+            <Image x:Name="wl1" Grid.Column="7" Grid.Row="2" Source="images/laeuferWeiss.png" Grid.ZIndex="98"/>
+            <Image x:Name="wk1" Grid.Column="7" Grid.Row="3" Source="images/koenigWeiss.png" Grid.ZIndex="98"/>
+            <Image x:Name="wd1" Grid.Column="7" Grid.Row="4" Source="images/dameWeiss.png" Grid.ZIndex="98"/>
+            <Image x:Name="wl2" Grid.Column="7" Grid.Row="5" Source="images/laeuferWeiss.png" Grid.ZIndex="98"/>
+            <Image x:Name="ws2" Grid.Column="7" Grid.Row="6" Source="images/springerWeiss.png" Grid.ZIndex="98"/>
+            <Image x:Name="wt2" Grid.Column="7" Grid.Row="7" Source="images/turmWeiss.png" Grid.ZIndex="98"/>
+            <Image x:Name="wb1" Grid.Column="6" Grid.Row="0" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
+            <Image x:Name="wb2" Grid.Column="6" Grid.Row="1" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
+            <Image x:Name="wb3" Grid.Column="6" Grid.Row="2" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
+            <Image x:Name="wb4" Grid.Column="6" Grid.Row="3" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
+            <Image x:Name="wb5" Grid.Column="6" Grid.Row="4" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
+            <Image x:Name="wb6" Grid.Column="6" Grid.Row="5" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
+            <Image x:Name="wb7" Grid.Column="6" Grid.Row="6" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
+            <Image x:Name="wb8" Grid.Column="6" Grid.Row="7" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
             <Custom:SurfaceButton Grid.ColumnSpan="4" Content="Start" Name="StartBtn" Grid.Column="2" Grid.Row="0" Grid.RowSpan="8" RenderTransformOrigin="0,0" Margin="0.2,0.4,0,0" IsEnabled="False" Visibility="Hidden" Background="Gray"/>
         </Grid>
         <TextBlock Grid.Column="4" Text="White player" TextWrapping="Wrap" Name="player1" RenderTransformOrigin="0.5,0.5" Margin="0,0,-2,0" Grid.Row="1" TextAlignment="Center" Foreground="Black">
