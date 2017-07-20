@@ -64,7 +64,7 @@ namespace Chess3000
             yMaster = 7 - yView;
             AddedPieces[xView, yView] = true;
             var PieceImg = (Image)this.FindName("p"+ xView+yView);
-            PieceImg.Visibility = Visibility.Hidden;
+            if(PieceImg != null) PieceImg.Visibility = Visibility.Hidden;
             if (AddedPiecesCount() == 5)
             {
                 StartBtn.Visibility = Visibility.Visible;
@@ -83,7 +83,7 @@ namespace Chess3000
             yMaster = 7 - yView;
             AddedPieces[xView, yView] = false;
             var PieceImg = (Image)this.FindName("p" + xView + yView);
-            PieceImg.Visibility = Visibility.Visible;
+            if (PieceImg != null) PieceImg.Visibility = Visibility.Visible;
             if (AddedPiecesCount() != 5)
             {
                 StartBtn.Visibility = Visibility.Hidden;
