@@ -32,6 +32,7 @@ namespace Chess3000
             InitializeComponent();
             FillBoardWithSquares();
             AddNotationLabels();
+            Grid.SetZIndex(StartBtn, 99);
             for (int x = 0; x < 8; x++)
             {
                 for (int y = 0; y < 8; y++)
@@ -66,7 +67,7 @@ namespace Chess3000
             AddedPieces[xView, yView] = true;
             if (AddedPiecesCount() == 5)
             {
-                Grid.SetZIndex(StartBtn, 99);
+                
                 StartBtn.Visibility = Visibility.Visible;
                 StartBtn.IsEnabled = true;
             }
