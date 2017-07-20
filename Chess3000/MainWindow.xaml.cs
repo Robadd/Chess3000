@@ -42,17 +42,16 @@ namespace Chess3000
             }
         }
 
-
-
         private int AddedPiecesCount()
         {
             int count = 0;
-            for(int x = 0; x < 8; x++)
+            for (int y = 0; y < 8; y++)
             {
-                for(int y = 0; y < 8; y++)
-                {
-                    if (AddedPieces[x, y]) count++;
-                }
+                if (AddedPieces[0, y]) count++;
+                if (AddedPieces[1, y]) count++;
+                if (AddedPieces[6, y]) count++;
+                if (AddedPieces[7, y]) count++;
+
             }
             return count;
         }
@@ -67,7 +66,6 @@ namespace Chess3000
             AddedPieces[xView, yView] = true;
             if (AddedPiecesCount() == 5)
             {
-                
                 StartBtn.Visibility = Visibility.Visible;
                 StartBtn.IsEnabled = true;
             }
@@ -83,9 +81,13 @@ namespace Chess3000
             xMaster = 7 - xView;
             yMaster = 7 - yView;
             AddedPieces[xView, yView] = false;
+            if (AddedPiecesCount() != 5)
+            {
+                StartBtn.Visibility = Visibility.Hidden;
+                StartBtn.IsEnabled = true;
+            }
             player1.Text = "";
             player2.Text = "Added Pieces: " + AddedPiecesCount();
-
         }
 
         private void FillBoardWithSquares()
