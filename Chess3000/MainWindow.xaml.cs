@@ -32,7 +32,6 @@ namespace Chess3000
             InitializeComponent();
             FillBoardWithSquares();
             AddNotationLabels();
-            Grid.SetZIndex(StartBtn, 99);
             for (int x = 0; x < 8; x++)
             {
                 for (int y = 0; y < 8; y++)
@@ -117,7 +116,9 @@ namespace Chess3000
                     tvcollection.Add(tv);
                     // Add to view
                     boardCanvas.Children.Add(rect);
+                    
                     boardCanvas.Children.Add(tv);
+                    
                 }
             }
             // Make Border of Chessboard

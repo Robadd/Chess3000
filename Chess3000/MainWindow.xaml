@@ -41,6 +41,14 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
+            <Image x:Name="st1" Grid.Column="0" Grid.Row="0" Source="images/turmSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="ss1" Grid.Column="0" Grid.Row="1" Source="images/springerSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="sl1" Grid.Column="0" Grid.Row="2" Source="images/laeuferSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="sk1" Grid.Column="0" Grid.Row="3" Source="images/koenigSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="sd1" Grid.Column="0" Grid.Row="4" Source="images/dameSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="sl2" Grid.Column="0" Grid.Row="5" Source="images/laeuferSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="ss2" Grid.Column="0" Grid.Row="6" Source="images/springerSchwarz.png" Grid.ZIndex="98"/>
+            <Image x:Name="st2" Grid.Column="0" Grid.Row="7" Source="images/turmSchwarz.png" Grid.ZIndex="98"/>
             <Custom:SurfaceButton Grid.ColumnSpan="4" Content="Start" Name="StartBtn" Grid.Column="2" Grid.Row="0" Grid.RowSpan="8" RenderTransformOrigin="0,0" Margin="0.2,0.4,0,0" IsEnabled="False" Visibility="Hidden" Background="Gray"/>
         </Grid>
         <TextBlock Grid.Column="4" Text="White player" TextWrapping="Wrap" Name="player1" RenderTransformOrigin="0.5,0.5" Margin="0,0,-2,0" Grid.Row="1" TextAlignment="Center" Foreground="Black">
@@ -53,7 +61,7 @@
                 </TransformGroup>
             </TextBlock.LayoutTransform>
         </TextBlock>
-        <TextBlock Grid.Column="0" Text="Black player" TextWrapping="Wrap" Name="player2"  Foreground="Black" RenderTransformOrigin="0.5,0.5" Margin="0" Grid.Row="1" TextAlignment="Center" >
+        <TextBlock Grid.Column="0" TextWrapping="Wrap" x:Name="player2"  Foreground="Black" RenderTransformOrigin="0.5,0.5" Margin="0" Grid.Row="1" TextAlignment="Center" >
             <TextBlock.LayoutTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -61,8 +69,11 @@
                     <RotateTransform Angle="90"/>
                     <TranslateTransform/>
                 </TransformGroup>
-            </TextBlock.LayoutTransform>
-        </TextBlock>
+            </TextBlock.LayoutTransform><Run Text="Black player"/><InlineUIContainer>
+                <Image x:Name="image1" Height="100" Width="100"/>
+            </InlineUIContainer><InlineUIContainer>
+                <Image x:Name="image" Height="100" Width="100"/>
+            </InlineUIContainer></TextBlock>
         <Grid Grid.Column="2" Name="LabelRight">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
