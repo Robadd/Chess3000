@@ -64,7 +64,7 @@ namespace Chess3000
             xMaster = 7 - xView;
             yMaster = 7 - yView;
             AddedPieces[xView, yView] = true;
-            if (AddedPiecesCount() == 32)
+            if (AddedPiecesCount() == 5)
             {
                 Grid.SetZIndex(StartBtn, 99);
                 StartBtn.Visibility = Visibility.Visible;
@@ -81,7 +81,7 @@ namespace Chess3000
             xView = (int)((Control)sender).GetValue(Grid.ColumnProperty);
             xMaster = 7 - xView;
             yMaster = 7 - yView;
-            AddedPieces[xView, yView] = true;
+            AddedPieces[xView, yView] = false;
             player1.Text = "";
             player2.Text = "Added Pieces: " + AddedPiecesCount();
 
