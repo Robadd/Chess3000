@@ -116,9 +116,9 @@ namespace Chess3000
                     tvcollection.Add(tv);
                     // Add to view
                     boardCanvas.Children.Add(rect);
-                    
+                    Grid.SetZIndex(rect, 0);
                     boardCanvas.Children.Add(tv);
-                    
+                    Grid.SetZIndex(tv, 99);
                 }
             }
             // Make Border of Chessboard
