@@ -55,7 +55,7 @@ namespace Chess3000
             return count;
         }
 
-        private void VisAdded(object sender, TagVisualizerEventArgs e)
+        private void VisAddedSetup(object sender, TagVisualizerEventArgs e)
         {
             int xMaster, yMaster, xView, yView;
             yView = (int)((Control)sender).GetValue(Grid.RowProperty);
@@ -74,7 +74,7 @@ namespace Chess3000
             player2.Text = "Added Pieces: " + AddedPiecesCount();
         }
 
-        private void VisRemoved(object sender, TagVisualizerEventArgs e)
+        private void VisRemovedSetup(object sender, TagVisualizerEventArgs e)
         {
             int xMaster, yMaster, xView, yView;
             yView = (int)((Control)sender).GetValue(Grid.RowProperty);
@@ -91,6 +91,36 @@ namespace Chess3000
             }
             player1.Text = "";
             player2.Text = "Added Pieces: " + AddedPiecesCount();
+        }
+
+        private void VisAddedPlay(object sender, TagVisualizerEventArgs e)
+        {
+            int xMaster, yMaster, xView, yView;
+            yView = (int)((Control)sender).GetValue(Grid.RowProperty);
+            xView = (int)((Control)sender).GetValue(Grid.ColumnProperty);
+            xMaster = 7 - xView;
+            yMaster = 7 - yView;
+        }
+
+        private void VisRemovedPlay(object sender, TagVisualizerEventArgs e)
+        {
+            int xMaster, yMaster, xView, yView;
+            yView = (int)((Control)sender).GetValue(Grid.RowProperty);
+            xView = (int)((Control)sender).GetValue(Grid.ColumnProperty);
+            xMaster = 7 - xView;
+            yMaster = 7 - yView;
+        }
+
+        private void StartGame()
+        {
+            StartBtn.Visibility = Visibility.Hidden;
+            foreach (TagVisualizer tv in tvcollection)
+            {
+                tv.VisualizationAdded -= VisAddedSetup;
+                tv.VisualizationRemoved -= VisRemovedSetup;
+                tv.VisualizationAdded += VisAddedPlay;
+                tv.VisualizationRemoved += VisRemovedPlay;
+            }
         }
 
         private void FillBoardWithSquares()
@@ -206,8 +236,8 @@ namespace Chess3000
             tv.SetValue(Grid.ColumnProperty, y);
             tv.VerticalAlignment = VerticalAlignment.Stretch;
             tv.HorizontalAlignment = HorizontalAlignment.Stretch;
-            tv.VisualizationAdded += VisAdded;
-            tv.VisualizationRemoved += VisRemoved;
+            tv.VisualizationAdded += VisAddedSetup;
+            tv.VisualizationRemoved += VisRemovedSetup;
             foreach(TagVisualizationDefinition foo in dc)
             {
                 tv.Definitions.Add(foo);
