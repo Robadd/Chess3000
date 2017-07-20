@@ -26,7 +26,8 @@ namespace Chess3000
             //Test
             Console.BufferHeight = Int16.MaxValue - 1;
             createInitialBoardState();
-            updatePossibleDestinations();
+            
+            /*
             Result res;
             Console.WriteLine("#####################");
             res = move(new Pos(1, 3), new Pos(2, 3));
@@ -40,6 +41,7 @@ namespace Chess3000
             res = move(new Pos(0, 4), new Pos(1, 3));
             Console.WriteLine(res.ToString());
             Console.WriteLine("#####################");
+            */
         }
 
         public Chess3000.Farbe Drawing
@@ -90,6 +92,8 @@ namespace Chess3000
 
             m_schachbrett[0][4].figur = new Koenig(Chess3000.Farbe.WEISS, m_schachbrett[0][4], this);
             m_schachbrett[7][4].figur = new Koenig(Chess3000.Farbe.SCHWARZ, m_schachbrett[7][4], this);
+
+            updatePossibleDestinations();
         }
 
         private void updatePossibleDestinations()
@@ -153,7 +157,7 @@ namespace Chess3000
                 {
                     if (feld.figur != null && feld.figur.Farbe == enemyColor)
                     {
-                        foreach (Pos pos in feld.figur.PosDes)
+                        foreach (Pos pos in feld.figur.CapDes)
                         {
                             //Equals() != ==-Operator
                             if (pos.Equals(kingPos)) { return true; }

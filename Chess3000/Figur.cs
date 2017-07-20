@@ -69,6 +69,12 @@ namespace Chess3000
             get { return moeglicheZiele; }
         }
 
+        //Nötig da CapDes != PosDes beim Bauern
+        virtual public List<Pos> CapDes
+        {
+            get { return moeglicheZiele; }
+        }
+
         public string PosDesString
         {
             get

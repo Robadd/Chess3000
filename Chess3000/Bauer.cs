@@ -8,9 +8,12 @@ namespace Chess3000
 {
     public class Bauer : Figur
     {
+        List<Pos> capDes;
+
         public Bauer(Farbe farbe, Feld feld, ChessMaster ChessMaster) : base(farbe, feld, ChessMaster)
         {
             pieceType = Chess3000.PieceType.Bauer;
+            capDes = new List<Pos>();
         }
 
         public override void updatePosDes()
@@ -45,6 +48,7 @@ namespace Chess3000
                     if (master.getFigur(new Pos(y, x)) != null && master.getFigur(new Pos(y, x)).Farbe != this.Farbe)
                     {
                         moeglicheZiele.Add(new Pos(y, x));
+                        capDes.Add(new Pos(y, x));
                     }
                 }
 
@@ -54,6 +58,7 @@ namespace Chess3000
                     if (master.getFigur(new Pos(y, x)) != null && master.getFigur(new Pos(y, x)).Farbe != this.Farbe)
                     {
                         moeglicheZiele.Add(new Pos(y, x));
+                        capDes.Add(new Pos(y, x));
                     }
                 }
             }
@@ -85,6 +90,7 @@ namespace Chess3000
                     if (master.getFigur(new Pos(y, x)) != null && master.getFigur(new Pos(y, x)).Farbe != this.Farbe)
                     {
                         moeglicheZiele.Add(new Pos(y, x));
+                        capDes.Add(new Pos(y, x));
                     }
                 }
 
@@ -94,9 +100,15 @@ namespace Chess3000
                     if (master.getFigur(new Pos(y, x)) != null && master.getFigur(new Pos(y, x)).Farbe != this.Farbe)
                     {
                         moeglicheZiele.Add(new Pos(y, x));
+                        capDes.Add(new Pos(y, x));
                     }
                 }
             }
+        }
+
+        public override List<Pos> CapDes
+        {
+            get { return capDes; }
         }
     }
 }
