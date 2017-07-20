@@ -20,7 +20,7 @@
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="10*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Row="1" Grid.Column="2" Name="boardCanvas" Margin="0,0,0,0"  SizeChanged="Board_SizeChanged">
+        <Grid Grid.Row="1" Grid.Column="2" Name="boardCanvas" Margin="0,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>

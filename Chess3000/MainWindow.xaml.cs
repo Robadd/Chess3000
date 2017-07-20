@@ -85,6 +85,7 @@ namespace Chess3000
             {
                 TextBlock label = new TextBlock();
                 label.Text = ((char)(65 + i)).ToString();
+                label.Foreground = Brushes.Black;
                 label.SetValue(Grid.RowProperty, 7 - i);
                 label.SetValue(Grid.ColumnProperty, 0);
                 label.TextAlignment = TextAlignment.Center;
@@ -97,6 +98,7 @@ namespace Chess3000
             {
                 TextBlock label = new TextBlock();
                 label.Text = ((char)(65 + (7 - i))).ToString();
+                label.Foreground = Brushes.Black;
                 label.SetValue(Grid.RowProperty,  i);
                 label.SetValue(Grid.ColumnProperty, 0);
                 label.TextAlignment = TextAlignment.Center;
@@ -109,6 +111,7 @@ namespace Chess3000
             {
                 TextBlock label = new TextBlock();
                 label.Text = (i+1).ToString();
+                label.Foreground = Brushes.Black;
                 label.SetValue(Grid.RowProperty, 0);
                 label.SetValue(Grid.ColumnProperty, 7-i);
                 label.TextAlignment = TextAlignment.Center;
@@ -121,6 +124,7 @@ namespace Chess3000
             {
                 TextBlock label = new TextBlock();
                 label.Text = (i+1).ToString();
+                label.Foreground = Brushes.Black;
                 label.SetValue(Grid.RowProperty, 2);
                 label.SetValue(Grid.ColumnProperty, 7-i);
                 label.TextAlignment = TextAlignment.Center;
