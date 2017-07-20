@@ -73,7 +73,7 @@
             <Image x:Name="p65" Grid.Column="6" Grid.Row="5" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
             <Image x:Name="p66" Grid.Column="6" Grid.Row="6" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
             <Image x:Name="p67" Grid.Column="6" Grid.Row="7" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
-            <Custom:SurfaceButton Grid.ColumnSpan="4" Grid.ZIndex="100"  Content="Start" Name="StartBtn" Grid.Column="2" Grid.Row="0" Grid.RowSpan="8" RenderTransformOrigin="0,0" Margin="0.2,0.4,0,0" IsEnabled="False" Visibility="Hidden" Background="Gray"/>
+            <Custom:SurfaceButton Grid.ColumnSpan="4" Grid.ZIndex="100"  Content="" Name="StartBtn" Grid.Column="2" Grid.Row="0" Grid.RowSpan="8" RenderTransformOrigin="0,0" Margin="0.2,0.4,0,0" IsEnabled="False" Visibility="Hidden" Background="Gray" Click="StartGame"/>
         </Grid>
         <TextBlock Grid.Column="4" Text="White player" TextWrapping="Wrap" Name="player1" RenderTransformOrigin="0.5,0.5" Margin="0,0,-2,0" Grid.Row="1" TextAlignment="Center" Foreground="Black">
             <TextBlock.LayoutTransform>
@@ -85,7 +85,7 @@
                 </TransformGroup>
             </TextBlock.LayoutTransform>
         </TextBlock>
-        <TextBlock Grid.Column="0" TextWrapping="Wrap" x:Name="player2"  Foreground="Black" RenderTransformOrigin="0.5,0.5" Margin="0" Grid.Row="1" TextAlignment="Center" >
+        <TextBlock Grid.Column="0" TextWrapping="Wrap" x:Name="player2" Foreground="Black" RenderTransformOrigin="0.5,0.5" Margin="0" Grid.Row="1" TextAlignment="Center" >
             <TextBlock.LayoutTransform>
                 <TransformGroup>
                     <ScaleTransform/>

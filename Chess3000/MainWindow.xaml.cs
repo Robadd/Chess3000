@@ -111,7 +111,7 @@ namespace Chess3000
             yMaster = 7 - yView;
         }
 
-        private void StartGame()
+        private void StartGame(object sender, RoutedEventArgs e)
         {
             StartBtn.Visibility = Visibility.Hidden;
             foreach (TagVisualizer tv in tvcollection)
@@ -243,16 +243,6 @@ namespace Chess3000
                 tv.Definitions.Add(foo);
             }
             return tv;
-        }
-
-        private void Board_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            
-        }
-
-        private void TagVisualizer_VisualizationAdded(object sender, TagVisualizerEventArgs e)
-        {
-            return;
         }
     }
 }
