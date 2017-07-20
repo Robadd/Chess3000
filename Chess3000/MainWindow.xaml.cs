@@ -191,6 +191,7 @@ namespace Chess3000
             for (int i = 0; i < count; i++)
             {
                 TagVisualizationDefinition td = new TagVisualizationDefinition();
+                td.Source = null;
                 td.Value = i;
                 td.LostTagTimeout = 200;
                 dc.Add(td);
