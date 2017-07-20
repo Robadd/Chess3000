@@ -19,6 +19,7 @@ namespace Chess3000
         public override void updatePosDes()
         {
             moeglicheZiele.Clear();
+            capDes.Clear();
 
             if (Farbe == Chess3000.Farbe.WEISS)
             {
