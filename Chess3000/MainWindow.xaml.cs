@@ -34,8 +34,8 @@ namespace Chess3000
         private void VisAdded(object sender, TagVisualizerEventArgs e)
         {
             int x, y;
-            y = (int)((Control)sender).GetValue(Grid.RowProperty);
-            x = (int)((Control)sender).GetValue(Grid.ColumnProperty);
+            y = 7 - (int)((Control)sender).GetValue(Grid.RowProperty);
+            x = 7 - (int)((Control)sender).GetValue(Grid.ColumnProperty);
             player1.Text = "Tag:" + "x:" + x + " y:" + y;
         }
 
