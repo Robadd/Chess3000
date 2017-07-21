@@ -20,25 +20,59 @@ namespace Chess3000
     {
         Feld[][] m_schachbrett;
         Chess3000.Farbe drawing = Farbe.WEISS;
+        Pos enPassentPos;
+        bool enPassentAllowed = false;
+        Figur eligiblePawn1 = null;
+        Figur eligiblePawn2 = null;
+
+        public Pos EnPassentPos
+        {
+            get { return enPassentPos; }
+        }
+
+        public Figur EligiblePawn1
+        {
+            get { return eligiblePawn1; }
+        }
+
+        public Figur EligiblePawn2
+        {
+            get { return eligiblePawn2; }
+        }
 
         public ChessMaster()
         {
-            //Test
-            Console.BufferHeight = Int16.MaxValue - 1;
+            //Damit frühere Züge noch nachgelesen werden können
+            Console.BufferHeight = (Int16)(Int16.MaxValue / 8.0);
             createInitialBoardState();
-            
+
+            /*    
+             *    //Schachtest
+                       Result res;
+                       Console.WriteLine("#####################");
+                       res = move(new Pos(1, 3), new Pos(2, 3));
+                       Console.WriteLine(res.ToString());
+                       res = move(new Pos(6, 4), new Pos(5, 4));
+                       Console.WriteLine(res.ToString());
+                       res = move(new Pos(1, 0), new Pos(2, 0));
+                       Console.WriteLine(res.ToString());
+                       res = move(new Pos(7, 5), new Pos(3, 1));
+                       Console.WriteLine(res.ToString());
+                       res = move(new Pos(0, 4), new Pos(1, 3));
+                       Console.WriteLine(res.ToString());
+                       Console.WriteLine("#####################");
+               */
             /*
+            //En passent test
             Result res;
             Console.WriteLine("#####################");
-            res = move(new Pos(1, 3), new Pos(2, 3));
+            res = move(new Pos(1, 1), new Pos(3, 1));
             Console.WriteLine(res.ToString());
-            res = move(new Pos(6, 4), new Pos(5, 4));
+            res = move(new Pos(6, 6), new Pos(4, 6));
             Console.WriteLine(res.ToString());
-            res = move(new Pos(1, 0), new Pos(2, 0));
+            res = move(new Pos(3, 1), new Pos(4, 1));
             Console.WriteLine(res.ToString());
-            res = move(new Pos(7, 5), new Pos(3, 1));
-            Console.WriteLine(res.ToString());
-            res = move(new Pos(0, 4), new Pos(1, 3));
+            res = move(new Pos(6, 0), new Pos(4, 0));
             Console.WriteLine(res.ToString());
             Console.WriteLine("#####################");
             */
@@ -180,11 +214,27 @@ namespace Chess3000
             {
                 Figur fromPiece = m_schachbrett[from.y][from.x].figur;
                 Figur toPiece = m_schachbrett[to.y][to.x].figur;
+                Figur enPassentPiece = null;
 
                 m_schachbrett[to.y][to.x].figur = m_schachbrett[from.y][from.x].figur;
                 m_schachbrett[to.y][to.x].figur.Feld = m_schachbrett[to.y][to.x];
                 m_schachbrett[from.y][from.x].figur = null;
-                updatePossibleDestinations();
+
+                Pos enPassentPiecePos = null;
+                if (enPassentAllowed && to.Equals(enPassentPos))
+                {                   
+                    if (drawing == Farbe.WEISS)
+                    {
+                        enPassentPiecePos = new Pos(enPassentPos.y - 1, enPassentPos.x);
+                    }
+                    else
+                    {
+                        enPassentPiecePos = new Pos(enPassentPos.y + 1, enPassentPos.x);
+                    }
+
+                    enPassentPiece = m_schachbrett[enPassentPiecePos.y][enPassentPiecePos.x].figur;
+                    m_schachbrett[enPassentPiecePos.y][enPassentPiecePos.x].figur = null;
+                }
 
                 if (check(drawing))
                 {
@@ -192,14 +242,75 @@ namespace Chess3000
                     m_schachbrett[from.y][from.x].figur = fromPiece;
                     m_schachbrett[from.y][from.x].figur.Feld = m_schachbrett[from.y][from.x];
                     m_schachbrett[to.y][to.x].figur = toPiece;
+
+                    if (enPassentAllowed && to.Equals(enPassentPos))
+                    {
+                        m_schachbrett[enPassentPiecePos.y][enPassentPiecePos.x].figur = enPassentPiece;
+                    }
+
                     updatePossibleDestinations();
 
                     return Result.ERROR_CHECK;
                 }
 
+                enPassentAllowed = checkForEnPassent(from, to);
+                updatePossibleDestinations();
+
                 endDraw();
                 return Result.SUCCESS;
             }
+        }
+
+        private bool checkForEnPassent(Pos formerPos, Pos currentPos)
+        {
+            eligiblePawn1 = null;
+            eligiblePawn2 = null;
+            Figur piece = getFigur(currentPos);
+
+            if (piece.PieceType == PieceType.Bauer)
+            {
+                if (drawing == Farbe.WEISS)
+                {
+                    if (currentPos.y == 3 && formerPos.y == 1)
+                    {
+                        if (currentPos.x + 1 <= 7)
+                        {
+                            eligiblePawn1 = getFigur(new Pos(currentPos.y, currentPos.x + 1));
+                        }
+                        if (currentPos.x - 1 >= 0)
+                        {
+                            eligiblePawn2 = getFigur(new Pos(currentPos.y, currentPos.x - 1));
+                        }
+
+                        if (eligiblePawn1 != null || eligiblePawn2 != null)
+                        {
+                            enPassentPos = new Pos(currentPos.y - 1, currentPos.x);
+                            return true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (currentPos.y == 4 && formerPos.y == 6)
+                    {
+                        if (currentPos.x + 1 <= 7)
+                        {
+                            eligiblePawn1 = getFigur(new Pos(currentPos.y, currentPos.x + 1));
+                        }
+                        if (currentPos.x - 1 >= 0)
+                        {
+                            eligiblePawn2 = getFigur(new Pos(currentPos.y, currentPos.x - 1));
+                        }
+
+                        if (eligiblePawn1 != null || eligiblePawn2 != null)
+                        {
+                            enPassentPos = new Pos(currentPos.y + 1, currentPos.x);
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         public Figur getFigur( Pos pos )

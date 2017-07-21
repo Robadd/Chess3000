@@ -49,7 +49,11 @@ namespace Chess3000
 
         protected Pos Pos
         {
-            get { return feld.Koordinate; }
+            get
+            {
+                if (feld != null) { return feld.Koordinate; }
+                else { return new Pos(-1, -1); }                
+            }
         }
 
         public Feld Feld
@@ -113,6 +117,26 @@ namespace Chess3000
             {
                 return pieceType;
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return (
+                obj != null &&
+                (obj as Figur).Farbe == this.Farbe &&
+                (obj as Figur).PieceType == this.PieceType &&
+                (obj as Figur).Pos.Equals(this.Pos)
+                );
+        }
+
+        //Black magic
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 23 + Farbe.GetHashCode();
+            hash = hash * 23 + PieceType.GetHashCode();
+            hash = hash * 23 + Pos.GetHashCode();
+            return hash;
         }
 
     }

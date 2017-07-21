@@ -60,7 +60,6 @@ namespace Chess3000
                 );
         }
 
-        //???
         public override int GetHashCode()
         {
             int hash = 17;
