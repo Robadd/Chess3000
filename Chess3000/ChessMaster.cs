@@ -203,6 +203,30 @@ namespace Chess3000
             return false;
         }
 
+        //Problem: schachbedrohte Felder auf denen gegnerische Figuren stehen werden nicht beachtet!
+        public List<Pos> filterCheckedFields(List<Pos> posDes, Farbe kingColor)
+        {
+            for (int y = 0; y <= 7; y++)
+            {
+                foreach (Feld field in m_schachbrett[y])
+                {
+                    if (field.figur != null && field.figur.Farbe != kingColor)
+                    {
+                        List<Pos> capDes = field.figur.CapDes;
+                        //reverse loop wegen removeAt()
+                        for (int i = posDes.Count - 1; i >= 0; i--)
+                        {                            
+                            if (capDes.Contains(posDes.ElementAt(i)))
+                            {
+                                posDes.RemoveAt(i);
+                            }
+                        }
+                    }
+                }
+            }
+            return posDes;
+        }
+
         public Chess3000.Result move( Pos from, Pos to)
         {
             Figur piece = getFigur(from);

@@ -68,6 +68,8 @@ namespace Chess3000
             {
                 addToPosDes(new Pos(y, x));
             }
+
+            //moeglicheZiele = master.filterCheckedFields(PosDes, this.Farbe);
         }
     }
 }
