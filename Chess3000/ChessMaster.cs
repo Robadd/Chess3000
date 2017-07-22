@@ -67,26 +67,31 @@ namespace Chess3000
         {
             //Damit frühere Züge noch nachgelesen werden können
             Console.BufferHeight = (Int16)(Int16.MaxValue / 8.0);
+
             createInitialBoardState();
 
-            /*    
-             *    //Schachtest
-                       Result res;
-                       Console.WriteLine("#####################");
-                       res = move(new Pos(1, 3), new Pos(2, 3));
-                       Console.WriteLine(res.ToString());
-                       res = move(new Pos(6, 4), new Pos(5, 4));
-                       Console.WriteLine(res.ToString());
-                       res = move(new Pos(1, 0), new Pos(2, 0));
-                       Console.WriteLine(res.ToString());
-                       res = move(new Pos(7, 5), new Pos(3, 1));
-                       Console.WriteLine(res.ToString());
-                       res = move(new Pos(0, 4), new Pos(1, 3));
-                       Console.WriteLine(res.ToString());
-                       Console.WriteLine("#####################");
-               */
-            /*
-            //En passent test
+            checkTest();
+        }
+
+        private void checkTest()
+        {
+            Result res;
+            Console.WriteLine("#####################");
+            res = move(new Pos(1, 3), new Pos(2, 3));
+            Console.WriteLine(res.ToString());
+            res = move(new Pos(6, 4), new Pos(5, 4));
+            Console.WriteLine(res.ToString());
+            res = move(new Pos(1, 0), new Pos(2, 0));
+            Console.WriteLine(res.ToString());
+            res = move(new Pos(7, 5), new Pos(3, 1));
+            Console.WriteLine(res.ToString());
+            res = move(new Pos(0, 4), new Pos(1, 3));
+            Console.WriteLine(res.ToString());
+            Console.WriteLine("#####################");
+        }
+
+        private void enPassenTest()
+        {
             Result res;
             Console.WriteLine("#####################");
             res = move(new Pos(1, 1), new Pos(3, 1));
@@ -98,10 +103,10 @@ namespace Chess3000
             res = move(new Pos(6, 0), new Pos(4, 0));
             Console.WriteLine(res.ToString());
             Console.WriteLine("#####################");
-            */
+        }
 
-            /*
-            //promotion test
+        private void promotionTest()
+        {
             Result res;
             Console.WriteLine("#####################");
             res = move(new Pos(1, 1), new Pos(3, 1));
@@ -120,12 +125,7 @@ namespace Chess3000
             Console.WriteLine(res.ToString());
             res = move(new Pos(3, 5), new Pos(2, 5));
             Console.WriteLine(res.ToString());
-            //res = move(new Pos(6, 0), new Pos(7, 1));
-            //Console.WriteLine(res.ToString());
             Console.WriteLine("#####################");
-            */
-
-            rochadeTest();
         }
 
         private void rochadeTest()
@@ -314,22 +314,20 @@ namespace Chess3000
 
         public Chess3000.Result move( Pos from, Pos to)
         {
-            Figur piece = getFigur(from);
-
-            if (piece == null) { return Result.ERROR_NULL_PIECE; }
-            else if (piece.Farbe != drawing) { return Result.ERROR_WRONG_COLOR; }
-            else if (!piece.validDes(to)) { return Result.ERROR_INVALID_DES; }
+            Figur fromPiece = getFigur(from);
+            if (fromPiece == null) { return Result.ERROR_NULL_PIECE; }
+            else if (fromPiece.Farbe != drawing) { return Result.ERROR_WRONG_COLOR; }
+            else if (!fromPiece.validDes(to)) { return Result.ERROR_INVALID_DES; }
             else
             {
-                Figur fromPiece = m_schachbrett[from.y][from.x].figur;
-                Figur toPiece = m_schachbrett[to.y][to.x].figur;
+                Figur toPiece = getFigur(to);
                 Figur enPassentPiece = null;
                 Pos enPassentPiecePos = null;
 
-                if (enPassentAllowed && 
-                    to.Equals(enPassentPos) &&
-                    (EligiblePawn1 != null && fromPiece.Equals(EligiblePawn1) ||
-                    EligiblePawn2 != null && fromPiece.Equals(EligiblePawn2)))
+                bool isEligiblePawn = EligiblePawn1 != null && fromPiece.Equals(EligiblePawn1) ||
+                                      EligiblePawn2 != null && fromPiece.Equals(EligiblePawn2);
+
+                if (enPassentAllowed && to.Equals(enPassentPos) && isEligiblePawn)
                 {
                     draw(from, to);
 
@@ -342,29 +340,26 @@ namespace Chess3000
                         enPassentPiecePos = new Pos(enPassentPos.y + 1, enPassentPos.x);
                     }
 
-                    enPassentPiece = m_schachbrett[enPassentPiecePos.y][enPassentPiecePos.x].figur;
-                    m_schachbrett[enPassentPiecePos.y][enPassentPiecePos.x].figur = null;
+                    enPassentPiece = getFigur(enPassentPiecePos);
+
+                    //beim En Passent wird eine Figur entfernt auf deren Position nicht gezogen wurde
+                    setPiece(enPassentPiecePos, null);
                 }
                 else
                 {
-                    draw(from, to);                  
+                    draw(from, to);
                 }
-
+                
                 updatePossibleDestinations();
 
                 if (check(drawing, getKingPosition(drawing)))
                 {
                     //Änderungen rückgängig machen
-                    m_schachbrett[from.y][from.x].figur = fromPiece;
-                    m_schachbrett[from.y][from.x].figur.Feld = m_schachbrett[from.y][from.x];
-                    m_schachbrett[to.y][to.x].figur = toPiece;
+                    reverse(from, to, fromPiece, toPiece);
 
-                    if (enPassentAllowed &&
-                        to.Equals(enPassentPos) &&
-                        (EligiblePawn1 != null && fromPiece.Equals(EligiblePawn1) ||
-                        EligiblePawn2 != null && fromPiece.Equals(EligiblePawn2)))
+                    if (enPassentAllowed && to.Equals(enPassentPos) && isEligiblePawn)
                     {
-                        m_schachbrett[enPassentPiecePos.y][enPassentPiecePos.x].figur = enPassentPiece;
+                        setPiece(enPassentPiecePos, enPassentPiece);
                     }
 
                     updatePossibleDestinations();
@@ -372,20 +367,40 @@ namespace Chess3000
                     return Result.ERROR_CHECK;
                 }
 
+                if (fromPiece.PieceType == PieceType.Bauer && (to.y == 7 || to.y == 0))
+                {
+                    promote(to);
+                }
+
                 rochadeDoubleDraw(fromPiece, from, to);
                 determineRochadeSituation(fromPiece, from);
-                promotion(fromPiece, to);
                 allowEnPassentNextTime(from, to);
                 endDraw();
+
                 return Result.SUCCESS;
             }
         }
 
+        private void setPiece(Pos pos, Figur piece)
+        {
+            if (piece != null)
+            {
+                piece.Feld = m_schachbrett[pos.y][pos.x];
+            }
+            m_schachbrett[pos.y][pos.x].figur = piece;
+        }
+
         private void draw(Pos from, Pos to)
         {
-            m_schachbrett[to.y][to.x].figur = m_schachbrett[from.y][from.x].figur;
-            m_schachbrett[to.y][to.x].figur.Feld = m_schachbrett[to.y][to.x];
-            m_schachbrett[from.y][from.x].figur = null;
+            setPiece(to, m_schachbrett[from.y][from.x].figur);
+            setPiece(from, null);
+        }
+
+        //Änderungen rückgängig machen
+        private void reverse(Pos from, Pos to, Figur fromPiece, Figur toPiece)
+        {
+            setPiece(from, fromPiece);
+            setPiece(to, toPiece);
         }
 
         //Schachprüfung hier nicht nötig, da dies bereits Koenig.checkForRochade() durchgeführt wurde
@@ -473,29 +488,29 @@ namespace Chess3000
             else { return false; }
         }
 
-        private bool promotion(Figur fromPiece, Pos to)
+        private void promote(Pos pos)
         {
-            if (fromPiece.PieceType == PieceType.Bauer &&
-                (to.y == 7 || to.y == 0))
-            {
-                MessageBoxResult res = MessageBox.Show(
-                    "Soll der Bauer durch eine Dame ersetzt werden?\n Wenn nicht wird er durch einen Springer ersetzt",
-                    "Beförderung",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
+            MessageBoxResult res = MessageBox.Show(
+                "Soll der Bauer durch eine Dame ersetzt werden?\n" +
+                "Wenn nicht wird er durch einen Springer ersetzt",
+                "Beförderung",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question
+                );
 
-                if (res == MessageBoxResult.Yes)
-                {
-                    m_schachbrett[to.y][to.x].figur = new Dame(fromPiece.Farbe, m_schachbrett[to.y][to.x], this);
-                }
-                else
-                {
-                    m_schachbrett[to.y][to.x].figur = new Springer(fromPiece.Farbe, m_schachbrett[to.y][to.x], this);
-                }
-                updatePossibleDestinations();
-                return true;
+            if (res == MessageBoxResult.Yes)
+            {
+                m_schachbrett[pos.y][pos.x].figur = new Dame(drawing,
+                                                             m_schachbrett[pos.y][pos.x],
+                                                             this);
             }
-            return false;
+            else
+            {
+                m_schachbrett[pos.y][pos.x].figur = new Springer(drawing,
+                                                                 m_schachbrett[pos.y][pos.x],
+                                                                 this);
+            }
+            updatePossibleDestinations();
         }
 
         private bool allowEnPassentNextTime(Pos formerPos, Pos currentPos)
