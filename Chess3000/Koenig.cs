@@ -70,6 +70,83 @@ namespace Chess3000
             }
 
             //moeglicheZiele = master.filterCheckedFields(PosDes, this.Farbe);
+            checkForRochade();
+        }
+
+        private void checkForRochade()
+        {
+            if (!master.check(this.Farbe, this.Pos))
+            {
+                if (this.Farbe == Farbe.WEISS)
+                {
+                    if (!master.whiteKingMoved)
+                    {
+                        //Kurze Rochade
+                        if (!master.whiteShortRookMoved)
+                        {
+                            //Beide Felder leer
+                            if (master.getFigur(new Pos(this.Pos.y, this.Pos.x + 1)) == null &&
+                                master.getFigur(new Pos(this.Pos.y, this.Pos.x + 2)) == null)
+                            {
+                                if (!master.check(this.Farbe, new Pos(this.Pos.y, this.Pos.x + 1)) &&
+                                    !master.check(this.Farbe, new Pos(this.Pos.y, this.Pos.x + 2)))
+                                {
+                                    moeglicheZiele.Add(new Pos(this.Pos.y, this.Pos.x + 2));
+                                }
+                            }
+                        }
+                        //Lange Rochade
+                        if (!master.whiteLongRookMoved)
+                        {
+                            //Beide Felder leer
+                            if (master.getFigur(new Pos(this.Pos.y, this.Pos.x - 1)) == null &&
+                                master.getFigur(new Pos(this.Pos.y, this.Pos.x - 2)) == null)
+                            {
+                                if (!master.check(this.Farbe, new Pos(this.Pos.y, this.Pos.x - 1)) &&
+                                    !master.check(this.Farbe, new Pos(this.Pos.y, this.Pos.x - 2)))
+                                {
+                                    moeglicheZiele.Add(new Pos(this.Pos.y, this.Pos.x - 2));
+                                }
+                            }
+                        }
+
+                    }
+                }
+                else
+                {
+                    if (!master.blackKingMoved)
+                    {
+                        //Kurze Rochade
+                        if (!master.blackShortRookMoved)
+                        {
+                            //Beide Felder leer
+                            if (master.getFigur(new Pos(this.Pos.y, this.Pos.x + 1)) == null &&
+                                master.getFigur(new Pos(this.Pos.y, this.Pos.x + 2)) == null)
+                            {
+                                if (!master.check(this.Farbe, new Pos(this.Pos.y, this.Pos.x + 1)) &&
+                                    !master.check(this.Farbe, new Pos(this.Pos.y, this.Pos.x + 2)))
+                                {
+                                    moeglicheZiele.Add(new Pos(this.Pos.y, this.Pos.x + 2));
+                                }
+                            }
+                        }
+                        //Lange Rochade
+                        if (!master.blackLongRookMoved)
+                        {
+                            //Beide Felder leer
+                            if (master.getFigur(new Pos(this.Pos.y, this.Pos.x - 1)) == null &&
+                                master.getFigur(new Pos(this.Pos.y, this.Pos.x - 2)) == null)
+                            {
+                                if (!master.check(this.Farbe, new Pos(this.Pos.y, this.Pos.x - 1)) &&
+                                    !master.check(this.Farbe, new Pos(this.Pos.y, this.Pos.x - 2)))
+                                {
+                                    moeglicheZiele.Add(new Pos(this.Pos.y, this.Pos.x - 2));
+                                }
+                            }
+                        }
+                    }
+                }
+            }            
         }
     }
 }

@@ -25,6 +25,25 @@ namespace Chess3000
         bool enPassentAllowed = false;
         Figur eligiblePawn1 = null;
         Figur eligiblePawn2 = null;
+//        public bool whiteRochadeAllowed = true;
+//        public bool blackRochadeAllowed = true;
+        public bool whiteKingMoved = false;
+        public bool blackKingMoved = false;
+        public bool whiteShortRookMoved = false;
+        public bool blackShortRookMoved = false;
+        public bool whiteLongRookMoved = false;
+        public bool blackLongRookMoved = false;
+        readonly Pos WHITE_KING_START_POS = new Pos(0, 4);
+        readonly Pos BLACK_KING_START_POS = new Pos(7, 4);
+        readonly Pos WHITE_SHORT_ROOK_START_POS = new Pos(0, 7);
+        readonly Pos BLACK_SHORT_ROOK_START_POS = new Pos(7, 7);
+        readonly Pos WHITE_LONG_ROOK_START_POS = new Pos(0, 0);
+        readonly Pos BLACK_LONG_ROOK_START_POS = new Pos(7, 0);
+        readonly Pos WHITE_SHORT_ROCHADE_POS = new Pos(0, 6);
+        readonly Pos BLACK_SHORT_ROCHADE_POS = new Pos(7, 6);
+        readonly Pos WHITE_LONG_ROCHADE_POS = new Pos(0, 2);
+        readonly Pos BLACK_LONG_ROCHADE_POS = new Pos(7, 2);
+
 
         public Pos EnPassentPos
         {
@@ -78,6 +97,7 @@ namespace Chess3000
             Console.WriteLine("#####################");
             */
 
+            /*
             //promotion test
             Result res;
             Console.WriteLine("#####################");
@@ -99,6 +119,47 @@ namespace Chess3000
             Console.WriteLine(res.ToString());
             //res = move(new Pos(6, 0), new Pos(7, 1));
             //Console.WriteLine(res.ToString());
+            Console.WriteLine("#####################");
+            */
+
+            rochadeTest();
+        }
+
+        private void rochadeTest()
+        {
+            Result res;
+            Console.WriteLine("#####################");
+
+            res = move(new Pos(1, 1), new Pos(2, 1)); //Bauer
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(6, 7), new Pos(5, 7)); //Bauer schwarz
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(1, 2), new Pos(3, 2)); //Bauer
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(5, 7), new Pos(4, 7)); //Bauer schwarz
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(0, 1), new Pos(2, 2)); //Springer
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(4, 7), new Pos(3, 7)); //Bauer schwarz
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(0, 2), new Pos(1, 1)); //Läufer
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(3, 7), new Pos(2, 7)); //Bauer schwarz
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(0, 3), new Pos(1, 2)); //Dame
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(6, 6), new Pos(5, 6)); //Bauer schwarz
+            Console.WriteLine(res.ToString());
+
             Console.WriteLine("#####################");
         }
 
@@ -204,21 +265,21 @@ namespace Chess3000
                 );
         }
 
-        bool check(Chess3000.Farbe kingColor)
+        public bool check(Chess3000.Farbe kingColor, Pos posInQuestion)
         {
-            Pos kingPos = getKingPosition(kingColor);
-            Chess3000.Farbe enemyColor = (kingColor == Farbe.WEISS ? Farbe.SCHWARZ : Farbe.WEISS);
+            
+            //Chess3000.Farbe enemyColor = (kingColor == Farbe.WEISS ? Farbe.SCHWARZ : Farbe.WEISS);
 
             for (int y = 0; y <= 7; y++)
             {
                 foreach (Feld feld in m_schachbrett[y])
                 {
-                    if (feld.figur != null && feld.figur.Farbe == enemyColor)
+                    if (feld.figur != null && feld.figur.Farbe != kingColor)
                     {
                         foreach (Pos pos in feld.figur.CapDes)
                         {
                             //Equals() != ==-Operator
-                            if (pos.Equals(kingPos)) { return true; }
+                            if (pos.Equals(posInQuestion)) { return true; }
                         }
                     }
                 }
@@ -295,7 +356,7 @@ namespace Chess3000
 
                 updatePossibleDestinations();
 
-                if (check(drawing))
+                if (check(drawing, getKingPosition(drawing)))
                 {
                     //Änderungen rückgängig machen
                     m_schachbrett[from.y][from.x].figur = fromPiece;
@@ -315,14 +376,137 @@ namespace Chess3000
                     return Result.ERROR_CHECK;
                 }
 
+                performeRochadeDoubleDraw(fromPiece, from, to);
+
+                determineRochadeSituation(fromPiece, from);
+
                 checkForPromotion(fromPiece, to);
 
-                enPassentAllowed = checkForEnPassent(from, to);
-                updatePossibleDestinations();
+                checkForEnPassent(from, to);
 
                 endDraw();
                 return Result.SUCCESS;
             }
+        }
+
+        private void draw(Pos from, Pos to)
+        {
+            m_schachbrett[to.y][to.x].figur = m_schachbrett[from.y][from.x].figur;
+            m_schachbrett[to.y][to.x].figur.Feld = m_schachbrett[to.y][to.x];
+            m_schachbrett[from.y][from.x].figur = null;
+        }
+
+        //Schachprüfung hier nicht nötig, da dies bereits Koenig.checkForRochade() durchgeführt wurde
+        private void performeRochadeDoubleDraw(Figur fromPiece, Pos from, Pos to)
+        {
+            if (fromPiece.PieceType == PieceType.Koenig)
+            {
+                if (from.Equals(WHITE_KING_START_POS) && to.Equals(WHITE_SHORT_ROCHADE_POS))
+                {
+                    m_schachbrett[WHITE_SHORT_ROCHADE_POS.y][WHITE_SHORT_ROCHADE_POS.x - 1].figur
+                        = m_schachbrett[WHITE_SHORT_ROOK_START_POS.y][WHITE_SHORT_ROOK_START_POS.x].figur;
+
+                    m_schachbrett[WHITE_SHORT_ROCHADE_POS.y][WHITE_SHORT_ROCHADE_POS.x - 1].figur.Feld
+                        = m_schachbrett[WHITE_SHORT_ROCHADE_POS.y][WHITE_SHORT_ROCHADE_POS.x - 1];
+
+                    m_schachbrett[WHITE_SHORT_ROOK_START_POS.y][WHITE_SHORT_ROOK_START_POS.x].figur = null;
+
+                    updatePossibleDestinations();
+                }
+                else if (from.Equals(WHITE_KING_START_POS) && to.Equals(WHITE_LONG_ROCHADE_POS))
+                {
+                    m_schachbrett[WHITE_LONG_ROCHADE_POS.y][WHITE_LONG_ROCHADE_POS.x + 1].figur
+                        = m_schachbrett[WHITE_LONG_ROOK_START_POS.y][WHITE_LONG_ROOK_START_POS.x].figur;
+
+                    m_schachbrett[WHITE_LONG_ROCHADE_POS.y][WHITE_LONG_ROCHADE_POS.x + 1].figur.Feld
+                        = m_schachbrett[WHITE_LONG_ROCHADE_POS.y][WHITE_LONG_ROCHADE_POS.x + 1];
+
+                    m_schachbrett[WHITE_LONG_ROOK_START_POS.y][WHITE_LONG_ROOK_START_POS.x].figur = null;
+
+                    updatePossibleDestinations();
+                }
+                else if (from.Equals(BLACK_KING_START_POS) && to.Equals(BLACK_SHORT_ROCHADE_POS))
+                {
+                    m_schachbrett[BLACK_SHORT_ROCHADE_POS.y][BLACK_SHORT_ROCHADE_POS.x - 1].figur
+                        = m_schachbrett[BLACK_SHORT_ROOK_START_POS.y][BLACK_SHORT_ROOK_START_POS.x].figur;
+
+                    m_schachbrett[BLACK_SHORT_ROCHADE_POS.y][BLACK_SHORT_ROCHADE_POS.x - 1].figur.Feld
+                        = m_schachbrett[BLACK_SHORT_ROCHADE_POS.y][BLACK_SHORT_ROCHADE_POS.x - 1];
+
+                    m_schachbrett[BLACK_SHORT_ROOK_START_POS.y][BLACK_SHORT_ROOK_START_POS.x].figur = null;
+
+                    updatePossibleDestinations();
+                }
+                else if (from.Equals(BLACK_KING_START_POS) && to.Equals(BLACK_LONG_ROCHADE_POS))
+                {
+                    m_schachbrett[BLACK_LONG_ROCHADE_POS.y][BLACK_LONG_ROCHADE_POS.x + 1].figur
+                        = m_schachbrett[BLACK_LONG_ROOK_START_POS.y][BLACK_LONG_ROOK_START_POS.x].figur;
+
+                    m_schachbrett[BLACK_LONG_ROCHADE_POS.y][BLACK_LONG_ROCHADE_POS.x + 1].figur.Feld
+                        = m_schachbrett[BLACK_LONG_ROCHADE_POS.y][BLACK_LONG_ROCHADE_POS.x + 1];
+
+                    m_schachbrett[BLACK_LONG_ROOK_START_POS.y][BLACK_LONG_ROOK_START_POS.x].figur = null;
+
+                    updatePossibleDestinations();
+                }
+            }
+        }
+
+        private bool determineRochadeSituation(Figur fromPiece, Pos from)
+        {
+            bool situationChanged = false;
+            if (drawing == Farbe.WEISS)
+            {
+                if (fromPiece.PieceType == PieceType.Koenig &&
+                    from.Equals(WHITE_KING_START_POS))
+                {
+                    whiteKingMoved = true;
+                    situationChanged = true;
+                }
+
+                if (fromPiece.PieceType == PieceType.Turm &&
+                    from.Equals(WHITE_SHORT_ROOK_START_POS))
+                {
+                    whiteShortRookMoved = true;
+                    situationChanged = true;
+                }
+
+                if (fromPiece.PieceType == PieceType.Turm &&
+                    from.Equals(WHITE_LONG_ROOK_START_POS))
+                {
+                    whiteLongRookMoved = true;
+                    situationChanged = true;
+                }
+            }
+            else
+            {
+                if (fromPiece.PieceType == PieceType.Koenig &&
+                    from.Equals(BLACK_KING_START_POS))
+                {
+                    blackKingMoved = true;
+                    situationChanged = true;
+                }
+
+                if (fromPiece.PieceType == PieceType.Turm &&
+                    from.Equals(BLACK_SHORT_ROOK_START_POS))
+                {
+                    blackShortRookMoved = true;
+                    situationChanged = true;
+                }
+
+                if (fromPiece.PieceType == PieceType.Turm &&
+                    from.Equals(BLACK_LONG_ROOK_START_POS))
+                {
+                    blackLongRookMoved = true;
+                    situationChanged = true;
+                }
+            }
+            if (situationChanged)
+            {
+                updatePossibleDestinations();
+                return true;
+            }
+            else { return false; }
         }
 
         private bool checkForPromotion(Figur fromPiece, Pos to)
@@ -374,7 +558,9 @@ namespace Chess3000
                         if (eligiblePawn1 != null || eligiblePawn2 != null)
                         {
                             enPassentPos = new Pos(currentPos.y - 1, currentPos.x);
-                            return true;
+                            enPassentAllowed = true;
+                            updatePossibleDestinations();
+                            return enPassentAllowed;
                         }
                     }
                 }
@@ -394,12 +580,16 @@ namespace Chess3000
                         if (eligiblePawn1 != null || eligiblePawn2 != null)
                         {
                             enPassentPos = new Pos(currentPos.y + 1, currentPos.x);
-                            return true;
+                            enPassentAllowed = true;
+                            updatePossibleDestinations();
+                            return enPassentAllowed;
                         }
                     }
                 }
             }
-            return false;
+            enPassentAllowed = false;
+            updatePossibleDestinations(); //Nötig?
+            return enPassentAllowed;
         }
 
         public Figur getFigur( Pos pos )
