@@ -315,25 +315,7 @@ namespace Chess3000
                     return Result.ERROR_CHECK;
                 }
 
-                if (fromPiece.PieceType == PieceType.Bauer &&
-                        (to.y == 7 || to.y == 0))
-                {
-                    MessageBoxResult res = MessageBox.Show(
-                        "Soll der Bauer durch eine Dame ersetzt werden?\n Wenn nicht wird er durch einen Springer ersetzt",
-                        "Beförderung",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Question);
-
-                    if (res == MessageBoxResult.Yes)
-                    {
-                        m_schachbrett[to.y][to.x].figur = new Dame(fromPiece.Farbe, m_schachbrett[to.y][to.x], this);
-                    }
-                    else
-                    {
-                        m_schachbrett[to.y][to.x].figur = new Springer(fromPiece.Farbe, m_schachbrett[to.y][to.x], this);
-                    }
-                    updatePossibleDestinations();
-                }
+                checkForPromotion(fromPiece, to);
 
                 enPassentAllowed = checkForEnPassent(from, to);
                 updatePossibleDestinations();
@@ -341,6 +323,31 @@ namespace Chess3000
                 endDraw();
                 return Result.SUCCESS;
             }
+        }
+
+        private bool checkForPromotion(Figur fromPiece, Pos to)
+        {
+            if (fromPiece.PieceType == PieceType.Bauer &&
+                (to.y == 7 || to.y == 0))
+            {
+                MessageBoxResult res = MessageBox.Show(
+                    "Soll der Bauer durch eine Dame ersetzt werden?\n Wenn nicht wird er durch einen Springer ersetzt",
+                    "Beförderung",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (res == MessageBoxResult.Yes)
+                {
+                    m_schachbrett[to.y][to.x].figur = new Dame(fromPiece.Farbe, m_schachbrett[to.y][to.x], this);
+                }
+                else
+                {
+                    m_schachbrett[to.y][to.x].figur = new Springer(fromPiece.Farbe, m_schachbrett[to.y][to.x], this);
+                }
+                updatePossibleDestinations();
+                return true;
+            }
+            return false;
         }
 
         private bool checkForEnPassent(Pos formerPos, Pos currentPos)
