@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Chess3000
 {
@@ -76,6 +77,29 @@ namespace Chess3000
             Console.WriteLine(res.ToString());
             Console.WriteLine("#####################");
             */
+
+            //promotion test
+            Result res;
+            Console.WriteLine("#####################");
+            res = move(new Pos(1, 1), new Pos(3, 1));
+            Console.WriteLine(res.ToString());
+            res = move(new Pos(6, 6), new Pos(4, 6));
+            Console.WriteLine(res.ToString());
+            res = move(new Pos(3, 1), new Pos(4, 1));
+            Console.WriteLine(res.ToString());
+            res = move(new Pos(6, 5), new Pos(4, 5));
+            Console.WriteLine(res.ToString());
+            res = move(new Pos(4, 1), new Pos(5, 1));
+            Console.WriteLine(res.ToString());
+            res = move(new Pos(4, 5), new Pos(3, 5));
+            Console.WriteLine(res.ToString());
+            res = move(new Pos(5, 1), new Pos(6, 0));
+            Console.WriteLine(res.ToString());
+            res = move(new Pos(3, 5), new Pos(2, 5));
+            Console.WriteLine(res.ToString());
+            //res = move(new Pos(6, 0), new Pos(7, 1));
+            //Console.WriteLine(res.ToString());
+            Console.WriteLine("#####################");
         }
 
         public Chess3000.Farbe Drawing
@@ -239,14 +263,17 @@ namespace Chess3000
                 Figur fromPiece = m_schachbrett[from.y][from.x].figur;
                 Figur toPiece = m_schachbrett[to.y][to.x].figur;
                 Figur enPassentPiece = null;
-
-                m_schachbrett[to.y][to.x].figur = m_schachbrett[from.y][from.x].figur;
-                m_schachbrett[to.y][to.x].figur.Feld = m_schachbrett[to.y][to.x];
-                m_schachbrett[from.y][from.x].figur = null;
-
                 Pos enPassentPiecePos = null;
-                if (enPassentAllowed && to.Equals(enPassentPos))
+
+                if (enPassentAllowed && 
+                    to.Equals(enPassentPos) &&
+                    (EligiblePawn1 != null && fromPiece.Equals(EligiblePawn1) ||
+                    EligiblePawn2 != null && fromPiece.Equals(EligiblePawn2)))
                 {                   
+                    m_schachbrett[to.y][to.x].figur = m_schachbrett[from.y][from.x].figur;
+                    m_schachbrett[to.y][to.x].figur.Feld = m_schachbrett[to.y][to.x];
+                    m_schachbrett[from.y][from.x].figur = null;
+
                     if (drawing == Farbe.WEISS)
                     {
                         enPassentPiecePos = new Pos(enPassentPos.y - 1, enPassentPos.x);
@@ -259,6 +286,14 @@ namespace Chess3000
                     enPassentPiece = m_schachbrett[enPassentPiecePos.y][enPassentPiecePos.x].figur;
                     m_schachbrett[enPassentPiecePos.y][enPassentPiecePos.x].figur = null;
                 }
+                else
+                {
+                    m_schachbrett[to.y][to.x].figur = m_schachbrett[from.y][from.x].figur;
+                    m_schachbrett[to.y][to.x].figur.Feld = m_schachbrett[to.y][to.x];
+                    m_schachbrett[from.y][from.x].figur = null;                   
+                }
+
+                updatePossibleDestinations();
 
                 if (check(drawing))
                 {
@@ -267,7 +302,10 @@ namespace Chess3000
                     m_schachbrett[from.y][from.x].figur.Feld = m_schachbrett[from.y][from.x];
                     m_schachbrett[to.y][to.x].figur = toPiece;
 
-                    if (enPassentAllowed && to.Equals(enPassentPos))
+                    if (enPassentAllowed &&
+                        to.Equals(enPassentPos) &&
+                        (EligiblePawn1 != null && fromPiece.Equals(EligiblePawn1) ||
+                        EligiblePawn2 != null && fromPiece.Equals(EligiblePawn2)))
                     {
                         m_schachbrett[enPassentPiecePos.y][enPassentPiecePos.x].figur = enPassentPiece;
                     }
@@ -275,6 +313,26 @@ namespace Chess3000
                     updatePossibleDestinations();
 
                     return Result.ERROR_CHECK;
+                }
+
+                if (fromPiece.PieceType == PieceType.Bauer &&
+                        (to.y == 7 || to.y == 0))
+                {
+                    MessageBoxResult res = MessageBox.Show(
+                        "Soll der Bauer durch eine Dame ersetzt werden?\n Wenn nicht wird er durch einen Springer ersetzt",
+                        "Beförderung",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
+
+                    if (res == MessageBoxResult.Yes)
+                    {
+                        m_schachbrett[to.y][to.x].figur = new Dame(fromPiece.Farbe, m_schachbrett[to.y][to.x], this);
+                    }
+                    else
+                    {
+                        m_schachbrett[to.y][to.x].figur = new Springer(fromPiece.Farbe, m_schachbrett[to.y][to.x], this);
+                    }
+                    updatePossibleDestinations();
                 }
 
                 enPassentAllowed = checkForEnPassent(from, to);
