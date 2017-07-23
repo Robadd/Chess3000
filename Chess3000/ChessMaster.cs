@@ -27,12 +27,12 @@ namespace Chess3000
         bool enPassantAllowed = false;
         Piece eligiblePawn1 = null;
         Piece eligiblePawn2 = null;
-        public bool whiteKingMoved = false;
-        public bool blackKingMoved = false;
-        public bool whiteShortRookMoved = false;
-        public bool blackShortRookMoved = false;
-        public bool whiteLongRookMoved = false;
-        public bool blackLongRookMoved = false;
+        bool whiteKingMoved = false;
+        bool blackKingMoved = false;
+        bool whiteShortRookMoved = false;
+        bool blackShortRookMoved = false;
+        bool whiteLongRookMoved = false;
+        bool blackLongRookMoved = false;
         readonly Pos White_KING_START_POS = new Pos(0, 4);
         readonly Pos Black_KING_START_POS = new Pos(7, 4);
         readonly Pos WHITE_ROOK_SHORT_START_POS = new Pos(0, 7);
@@ -67,14 +67,14 @@ namespace Chess3000
 
         public ChessMaster()
         {
+#if DEBUG
             //Damit frühere Züge noch nachgelesen werden können
-            Console.BufferHeight = (Int16)(Int16.MaxValue / 8.0);
-
+            Console.BufferHeight = (Int16)(Int16.MaxValue / 4.0);
+#endif
             createInitialBoardState();
-
-            enPassantTest();
         }
 
+#if DEBUG
         private void checkTest()
         {
             Result res;
@@ -168,6 +168,76 @@ namespace Chess3000
             Console.WriteLine("#####################");
         }
 
+        private void castlingCheckTest()
+        {
+            Result res;
+            Console.WriteLine("#####################");
+
+            res = move(new Pos(1, 3), new Pos(2, 3)); //Bauer weiß
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(6, 6), new Pos(5, 6)); //Bauer schwarz
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(1, 4), new Pos(3, 4)); //Bauer weiß
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(6, 0), new Pos(5, 0)); //Bauer schwarz
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(0, 1), new Pos(2, 0)); //Springer weiß
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(7, 0), new Pos(6, 0)); //Turm schwarz
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(0, 2), new Pos(2, 4)); //Läufer weiß
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(6, 0), new Pos(7, 0)); //Turm schwarz
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(2, 4), new Pos(3, 3)); //Läufer weiß
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(7, 0), new Pos(6, 0)); //Turm schwarz
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(0, 3), new Pos(1, 4)); //Dame weiß
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(6, 0), new Pos(7, 0)); //Turm schwarz
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(0, 6), new Pos(2, 7)); //Springer weiß
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(7, 5), new Pos(5, 7)); //Läufer schwarz
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(1, 6), new Pos(2, 6)); //Springer weiß
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(5, 7), new Pos(7, 5)); //Läufer schwarz
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(0, 5), new Pos(1, 6)); //Springer weiß
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(7, 0), new Pos(6, 0)); //Turm schwarz
+            Console.WriteLine(res.ToString());
+           
+            res = move(new Pos(1, 1), new Pos(2, 1)); //Bauer weiß
+            Console.WriteLine(res.ToString());
+
+            res = move(new Pos(7, 5), new Pos(5, 7)); //Läufer schwarz
+            Console.WriteLine(res.ToString());
+            
+
+            Console.WriteLine("#####################");
+        }
+#endif
+
         public Chess3000.Color Drawing
         {
             get { return drawing; }
@@ -249,8 +319,9 @@ namespace Chess3000
 
         private void updatePossibleDestinations()
         {
-            //Debug
+#if DEBUG
             Console.WriteLine("********************************************************");
+#endif
             for (int y = 0; y <= 7; y++)
             {
                 foreach (Square square in chessboard[y])
@@ -258,14 +329,14 @@ namespace Chess3000
                     if (square.piece != null)
                     {
                         square.piece.updatePosDes();
-
-                        //Debug
+#if DEBUG
                         Console.WriteLine("Piece: " + square.piece.PieceType.ToString());
                         Console.WriteLine("Color: " + square.piece.Color.ToString());
                         Console.WriteLine("Position: " + square.piece.currentPosString);
                         Console.WriteLine("Mögliche Ziele:");
                         Console.WriteLine(square.piece.PosDesString);
                         Console.WriteLine("");
+#endif
                     }
                 }
             }
@@ -358,6 +429,10 @@ namespace Chess3000
                 Piece toPiece = getPiece(to);
 
                 draw(from, to);
+                //muss vor updatePossibleDestinations() ausgeführt werden
+
+                updateCastlingAvailability(fromPiece, from);
+
                 bool enPassantPerformed = handleEnPassant(fromPiece, from, to);
                 
                 updatePossibleDestinations();
@@ -384,7 +459,6 @@ namespace Chess3000
 
                 handleCastling(fromPiece, from, to);
 
-                updateCastlingAvailability(fromPiece, from);
                 updateEnPassantAvailability(from, to);
 
                 endTurn(from, to);
@@ -518,6 +592,27 @@ namespace Chess3000
             }
             else { return false; }
         }
+
+        public bool WhiteShortCastlingPiecesNotMoved
+        {
+            get { return !whiteKingMoved && !whiteShortRookMoved; }
+        }
+
+        public bool BlackShortCastlingPiecesNotMoved
+        {
+            get { return !blackKingMoved && !blackShortRookMoved; }
+        }
+
+        public bool WhiteLongCastlingPiecesNotMoved
+        {
+            get { return !whiteKingMoved && !whiteLongRookMoved; }
+        }
+
+        public bool BlackLongCastlingPiecesNotMoved
+        {
+            get { return !blackKingMoved && !blackLongRookMoved; }
+        }
+
 
         private void promote(Pos pos)
         {

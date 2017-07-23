@@ -69,7 +69,6 @@ namespace Chess3000
                 addToPosDes(new Pos(y, x));
             }
 
-            //possibleDestinations = master.filterCheckedFields(PosDes, this.Color);
             checkForCastling();
         }
 
@@ -77,76 +76,50 @@ namespace Chess3000
         {
             if (!master.check(this.Color, this.Pos))
             {
-                if (this.Color == Color.White)
-                {
-                    if (!master.whiteKingMoved)
-                    {
-                        //Kurze Castling
-                        if (!master.whiteShortRookMoved)
-                        {
-                            //Beide Squareer leer
-                            if (master.getPiece(new Pos(this.Pos.y, this.Pos.x + 1)) == null &&
-                                master.getPiece(new Pos(this.Pos.y, this.Pos.x + 2)) == null)
-                            {
-                                if (!master.check(this.Color, new Pos(this.Pos.y, this.Pos.x + 1)) &&
-                                    !master.check(this.Color, new Pos(this.Pos.y, this.Pos.x + 2)))
-                                {
-                                    possibleDestinations.Add(new Pos(this.Pos.y, this.Pos.x + 2));
-                                }
-                            }
-                        }
-                        //Lange Castling
-                        if (!master.whiteLongRookMoved)
-                        {
-                            //Beide Squareer leer
-                            if (master.getPiece(new Pos(this.Pos.y, this.Pos.x - 1)) == null &&
-                                master.getPiece(new Pos(this.Pos.y, this.Pos.x - 2)) == null)
-                            {
-                                if (!master.check(this.Color, new Pos(this.Pos.y, this.Pos.x - 1)) &&
-                                    !master.check(this.Color, new Pos(this.Pos.y, this.Pos.x - 2)))
-                                {
-                                    possibleDestinations.Add(new Pos(this.Pos.y, this.Pos.x - 2));
-                                }
-                            }
-                        }
+                bool whiteShortCastlingCase = this.Color == Color.White &&
+                                              master.WhiteShortCastlingPiecesNotMoved;
+                bool blackShortCastlingCase = this.Color == Color.Black && 
+                                              master.BlackShortCastlingPiecesNotMoved;
 
-                    }
-                }
-                else
+                if (whiteShortCastlingCase || blackShortCastlingCase)
                 {
-                    if (!master.blackKingMoved)
+                    Pos kingShortCrossPos = new Pos(this.Pos.y, this.Pos.x + 1);
+                    Pos kingShortCastlingPos = new Pos(this.Pos.y, this.Pos.x + 2);
+
+                    //Beide Felder leer
+                    if (master.getPiece(kingShortCrossPos) == null &&
+                        master.getPiece(kingShortCastlingPos) == null)
                     {
-                        //Kurzes Castling
-                        if (!master.blackShortRookMoved)
+                        if (!master.check(this.Color, kingShortCrossPos) &&
+                            !master.check(this.Color, kingShortCastlingPos))
                         {
-                            //Beide Squareer leer
-                            if (master.getPiece(new Pos(this.Pos.y, this.Pos.x + 1)) == null &&
-                                master.getPiece(new Pos(this.Pos.y, this.Pos.x + 2)) == null)
-                            {
-                                if (!master.check(this.Color, new Pos(this.Pos.y, this.Pos.x + 1)) &&
-                                    !master.check(this.Color, new Pos(this.Pos.y, this.Pos.x + 2)))
-                                {
-                                    possibleDestinations.Add(new Pos(this.Pos.y, this.Pos.x + 2));
-                                }
-                            }
-                        }
-                        //Langes Castling
-                        if (!master.blackLongRookMoved)
-                        {
-                            //Beide Felder leer
-                            if (master.getPiece(new Pos(this.Pos.y, this.Pos.x - 1)) == null &&
-                                master.getPiece(new Pos(this.Pos.y, this.Pos.x - 2)) == null)
-                            {
-                                if (!master.check(this.Color, new Pos(this.Pos.y, this.Pos.x - 1)) &&
-                                    !master.check(this.Color, new Pos(this.Pos.y, this.Pos.x - 2)))
-                                {
-                                    possibleDestinations.Add(new Pos(this.Pos.y, this.Pos.x - 2));
-                                }
-                            }
+                            possibleDestinations.Add(kingShortCastlingPos);
                         }
                     }
                 }
-            }            
+
+                bool whiteLongCastlingCase = this.Color == Color.White &&
+                                             master.WhiteLongCastlingPiecesNotMoved;
+                bool blackLongCastlingCase = this.Color == Color.Black &&
+                                             master.BlackLongCastlingPiecesNotMoved;
+
+                if (whiteLongCastlingCase || blackLongCastlingCase)
+                {
+                    Pos kingLongCrossPos = new Pos(this.Pos.y, this.Pos.x - 1);
+                    Pos kingLongCastlingPos = new Pos(this.Pos.y, this.Pos.x - 2);
+
+                    //Beide Felder leer
+                    if (master.getPiece(kingLongCrossPos) == null &&
+                        master.getPiece(kingLongCastlingPos) == null)
+                    {
+                        if (!master.check(this.Color, kingLongCrossPos) &&
+                            !master.check(this.Color, kingLongCastlingPos))
+                        {
+                            possibleDestinations.Add(kingLongCastlingPos);
+                        }
+                    }
+                }              
+            }
         }
     }
 }
