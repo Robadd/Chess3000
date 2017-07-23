@@ -19,22 +19,22 @@ namespace Chess3000
 
     public class ChessMaster
     {
-        Feld[][] m_schachbrett;
-        Chess3000.Farbe drawing = Farbe.WEISS;
+        Square[][] chessboard;
+        Chess3000.Color drawing = Color.White;
         Pos enPassantPos = null;
         Pos enPassantPiecePos = null;
-        Figur enPassantPiece = null;
+        Piece enPassantPiece = null;
         bool enPassantAllowed = false;
-        Figur eligiblePawn1 = null;
-        Figur eligiblePawn2 = null;
+        Piece eligiblePawn1 = null;
+        Piece eligiblePawn2 = null;
         public bool whiteKingMoved = false;
         public bool blackKingMoved = false;
         public bool whiteShortRookMoved = false;
         public bool blackShortRookMoved = false;
         public bool whiteLongRookMoved = false;
         public bool blackLongRookMoved = false;
-        readonly Pos WHITE_KING_START_POS = new Pos(0, 4);
-        readonly Pos BLACK_KING_START_POS = new Pos(7, 4);
+        readonly Pos White_KING_START_POS = new Pos(0, 4);
+        readonly Pos Black_KING_START_POS = new Pos(7, 4);
         readonly Pos WHITE_ROOK_SHORT_START_POS = new Pos(0, 7);
         readonly Pos BLACK_ROOK_SHORT_START_POS = new Pos(7, 7);
         readonly Pos WHITE_ROOK_LONG_START_POS = new Pos(0, 0);
@@ -55,12 +55,12 @@ namespace Chess3000
             get { return enPassantPos; }
         }
 
-        public Figur EligiblePawn1
+        public Piece EligiblePawn1
         {
             get { return eligiblePawn1; }
         }
 
-        public Figur EligiblePawn2
+        public Piece EligiblePawn2
         {
             get { return eligiblePawn2; }
         }
@@ -135,40 +135,40 @@ namespace Chess3000
             Result res;
             Console.WriteLine("#####################");
 
-            res = move(new Pos(1, 1), new Pos(2, 1)); //Bauer
+            res = move(new Pos(1, 1), new Pos(2, 1)); //Pawn
             Console.WriteLine(res.ToString());
 
-            res = move(new Pos(6, 7), new Pos(5, 7)); //Bauer schwarz
+            res = move(new Pos(6, 7), new Pos(5, 7)); //Pawn schwarz
             Console.WriteLine(res.ToString());
 
-            res = move(new Pos(1, 2), new Pos(3, 2)); //Bauer
+            res = move(new Pos(1, 2), new Pos(3, 2)); //Pawn
             Console.WriteLine(res.ToString());
 
-            res = move(new Pos(5, 7), new Pos(4, 7)); //Bauer schwarz
+            res = move(new Pos(5, 7), new Pos(4, 7)); //Pawn schwarz
             Console.WriteLine(res.ToString());
 
-            res = move(new Pos(0, 1), new Pos(2, 2)); //Springer
+            res = move(new Pos(0, 1), new Pos(2, 2)); //Knight
             Console.WriteLine(res.ToString());
 
-            res = move(new Pos(4, 7), new Pos(3, 7)); //Bauer schwarz
+            res = move(new Pos(4, 7), new Pos(3, 7)); //Pawn schwarz
             Console.WriteLine(res.ToString());
 
             res = move(new Pos(0, 2), new Pos(1, 1)); //Läufer
             Console.WriteLine(res.ToString());
 
-            res = move(new Pos(3, 7), new Pos(2, 7)); //Bauer schwarz
+            res = move(new Pos(3, 7), new Pos(2, 7)); //Pawn schwarz
             Console.WriteLine(res.ToString());
 
-            res = move(new Pos(0, 3), new Pos(1, 2)); //Dame
+            res = move(new Pos(0, 3), new Pos(1, 2)); //Queen
             Console.WriteLine(res.ToString());
 
-            res = move(new Pos(6, 6), new Pos(5, 6)); //Bauer schwarz
+            res = move(new Pos(6, 6), new Pos(5, 6)); //Pawn schwarz
             Console.WriteLine(res.ToString());
 
             Console.WriteLine("#####################");
         }
 
-        public Chess3000.Farbe Drawing
+        public Chess3000.Color Drawing
         {
             get { return drawing; }
         }
@@ -187,7 +187,7 @@ namespace Chess3000
 
         private void createInitialBoardState()
         {
-            drawing = Farbe.WEISS;
+            drawing = Color.White;
             enPassantPos = null;
             enPassantPiecePos = null;
             enPassantPiece = null;
@@ -202,47 +202,47 @@ namespace Chess3000
             blackLongRookMoved = false;
             lastFrom = null;
             lastTo = null;
-            m_schachbrett = new Feld[8][];
+            chessboard = new Square[8][];
 
             for (int y = 0; y < 8; y++)
             {
-                m_schachbrett[y] = new Feld[8];
+                chessboard[y] = new Square[8];
             }
 
             for (int y = 0; y < 8; y++)
             {
                 for (int x = 0; x < 8; x++)
                 {
-                    m_schachbrett[y][x] = new Feld(new Pos(y, x));
+                    chessboard[y][x] = new Square(new Pos(y, x));
                 }
             }
 
             for (int x = 0; x <= 7; x++)
             {
-                m_schachbrett[1][x].figur = new Bauer(Chess3000.Farbe.WEISS, m_schachbrett[1][x], this);
-                m_schachbrett[6][x].figur = new Bauer(Chess3000.Farbe.SCHWARZ, m_schachbrett[6][x], this);
+                chessboard[1][x].piece = new Pawn(Chess3000.Color.White, chessboard[1][x], this);
+                chessboard[6][x].piece = new Pawn(Chess3000.Color.Black, chessboard[6][x], this);
             }
 
-            m_schachbrett[0][0].figur = new Turm(Chess3000.Farbe.WEISS, m_schachbrett[0][0], this);
-            m_schachbrett[0][7].figur = new Turm(Chess3000.Farbe.WEISS, m_schachbrett[0][7], this);
-            m_schachbrett[7][0].figur = new Turm(Chess3000.Farbe.SCHWARZ, m_schachbrett[7][0], this);
-            m_schachbrett[7][7].figur = new Turm(Chess3000.Farbe.SCHWARZ, m_schachbrett[7][7], this);
+            chessboard[0][0].piece = new Rook(Chess3000.Color.White, chessboard[0][0], this);
+            chessboard[0][7].piece = new Rook(Chess3000.Color.White, chessboard[0][7], this);
+            chessboard[7][0].piece = new Rook(Chess3000.Color.Black, chessboard[7][0], this);
+            chessboard[7][7].piece = new Rook(Chess3000.Color.Black, chessboard[7][7], this);
 
-            m_schachbrett[0][1].figur = new Springer(Chess3000.Farbe.WEISS, m_schachbrett[0][1], this);
-            m_schachbrett[0][6].figur = new Springer(Chess3000.Farbe.WEISS, m_schachbrett[0][6], this);
-            m_schachbrett[7][1].figur = new Springer(Chess3000.Farbe.SCHWARZ, m_schachbrett[7][1], this);
-            m_schachbrett[7][6].figur = new Springer(Chess3000.Farbe.SCHWARZ, m_schachbrett[7][6], this);
+            chessboard[0][1].piece = new Knight(Chess3000.Color.White, chessboard[0][1], this);
+            chessboard[0][6].piece = new Knight(Chess3000.Color.White, chessboard[0][6], this);
+            chessboard[7][1].piece = new Knight(Chess3000.Color.Black, chessboard[7][1], this);
+            chessboard[7][6].piece = new Knight(Chess3000.Color.Black, chessboard[7][6], this);
 
-            m_schachbrett[0][2].figur = new Laeufer(Chess3000.Farbe.WEISS, m_schachbrett[0][2], this);
-            m_schachbrett[0][5].figur = new Laeufer(Chess3000.Farbe.WEISS, m_schachbrett[0][5], this);
-            m_schachbrett[7][2].figur = new Laeufer(Chess3000.Farbe.SCHWARZ, m_schachbrett[7][2], this);
-            m_schachbrett[7][5].figur = new Laeufer(Chess3000.Farbe.SCHWARZ, m_schachbrett[7][5], this);
+            chessboard[0][2].piece = new Bishop(Chess3000.Color.White, chessboard[0][2], this);
+            chessboard[0][5].piece = new Bishop(Chess3000.Color.White, chessboard[0][5], this);
+            chessboard[7][2].piece = new Bishop(Chess3000.Color.Black, chessboard[7][2], this);
+            chessboard[7][5].piece = new Bishop(Chess3000.Color.Black, chessboard[7][5], this);
 
-            m_schachbrett[0][3].figur = new Dame(Chess3000.Farbe.WEISS, m_schachbrett[0][3], this);
-            m_schachbrett[7][3].figur = new Dame(Chess3000.Farbe.SCHWARZ, m_schachbrett[7][3], this);
+            chessboard[0][3].piece = new Queen(Chess3000.Color.White, chessboard[0][3], this);
+            chessboard[7][3].piece = new Queen(Chess3000.Color.Black, chessboard[7][3], this);
 
-            m_schachbrett[0][4].figur = new Koenig(Chess3000.Farbe.WEISS, m_schachbrett[0][4], this);
-            m_schachbrett[7][4].figur = new Koenig(Chess3000.Farbe.SCHWARZ, m_schachbrett[7][4], this);
+            chessboard[0][4].piece = new King(Chess3000.Color.White, chessboard[0][4], this);
+            chessboard[7][4].piece = new King(Chess3000.Color.Black, chessboard[7][4], this);
 
             updatePossibleDestinations();
         }
@@ -253,59 +253,59 @@ namespace Chess3000
             Console.WriteLine("********************************************************");
             for (int y = 0; y <= 7; y++)
             {
-                foreach (Feld feld in m_schachbrett[y])
+                foreach (Square square in chessboard[y])
                 {
-                    if (feld.figur != null)
+                    if (square.piece != null)
                     {
-                        feld.figur.updatePosDes();
+                        square.piece.updatePosDes();
 
                         //Debug
-                        Console.WriteLine("Figur: " + feld.figur.PieceType.ToString());
-                        Console.WriteLine("Farbe: " + feld.figur.Farbe.ToString());
-                        Console.WriteLine("Position: " + feld.figur.currentPosString);
+                        Console.WriteLine("Piece: " + square.piece.PieceType.ToString());
+                        Console.WriteLine("Color: " + square.piece.Color.ToString());
+                        Console.WriteLine("Position: " + square.piece.currentPosString);
                         Console.WriteLine("Mögliche Ziele:");
-                        Console.WriteLine(feld.figur.PosDesString);
+                        Console.WriteLine(square.piece.PosDesString);
                         Console.WriteLine("");
                     }
                 }
             }
         }
         
-        Pos getKingPosition( Chess3000.Farbe player)
+        Pos getKingPosition(Chess3000.Color player)
         {
             Pos kingPos = new Pos(-1,-1);
             for (int y = 0; y <= 7; y++)
             {
-                foreach (Feld feld in m_schachbrett[y])
+                foreach (Square square in chessboard[y])
                 {
-                    if (feld.figur != null && feld.figur.PieceType == PieceType.Koenig && feld.figur.Farbe == player)
+                    if (square.piece != null && square.piece.PieceType == PieceType.King && square.piece.Color == player)
                     {
-                        kingPos = feld.Koordinate;
+                        kingPos = square.Coordinate;
                     }
                 }
             }
             return kingPos;
         }
 
-        bool foundPiece(Chess3000.Farbe color, Chess3000.PieceType pieceType, Pos currentPos)
+        bool foundPiece(Chess3000.Color color, Chess3000.PieceType pieceType, Pos currentPos)
         {
-            Figur figur = getFigur(new Pos(currentPos.y, currentPos.x));
+            Piece piece = getPiece(new Pos(currentPos.y, currentPos.x));
             return (
-                figur != null &&
-                figur.Farbe == color &&
-                figur.PieceType == pieceType
+                piece != null &&
+                piece.Color == color &&
+                piece.PieceType == pieceType
                 );
         }
 
-        public bool check(Chess3000.Farbe kingColor, Pos posInQuestion)
+        public bool check(Chess3000.Color kingColor, Pos posInQuestion)
         {
             for (int y = 0; y <= 7; y++)
             {
-                foreach (Feld feld in m_schachbrett[y])
+                foreach (Square square in chessboard[y])
                 {
-                    if (feld.figur != null && feld.figur.Farbe != kingColor)
+                    if (square.piece != null && square.piece.Color != kingColor)
                     {
-                        foreach (Pos pos in feld.figur.CapDes)
+                        foreach (Pos pos in square.piece.CapDes)
                         {
                             //Equals() != ==-Operator
                             if (pos.Equals(posInQuestion)) { return true; }
@@ -318,15 +318,15 @@ namespace Chess3000
         }
 
         //Problem: schachbedrohte Felder auf denen gegnerische Figuren stehen werden nicht beachtet!
-        public List<Pos> filterCheckedFields(List<Pos> posDes, Farbe kingColor)
+        public List<Pos> filterCheckedFields(List<Pos> posDes, Color kingColor)
         {
             for (int y = 0; y <= 7; y++)
             {
-                foreach (Feld field in m_schachbrett[y])
+                foreach (Square field in chessboard[y])
                 {
-                    if (field.figur != null && field.figur.Farbe != kingColor)
+                    if (field.piece != null && field.piece.Color != kingColor)
                     {
-                        List<Pos> capDes = field.figur.CapDes;
+                        List<Pos> capDes = field.piece.CapDes;
                         //reverse loop wegen removeAt()
                         for (int i = posDes.Count - 1; i >= 0; i--)
                         {                            
@@ -346,16 +346,16 @@ namespace Chess3000
             createInitialBoardState();
         }
 
-        public Chess3000.Result move( Pos from, Pos to)
+        public Chess3000.Result move(Pos from, Pos to)
         {
-            Figur fromPiece = getFigur(from);
+            Piece fromPiece = getPiece(from);
             if (fromPiece == null) { return Result.ERROR_NULL_PIECE; }
-            else if (fromPiece.Farbe != drawing) { return Result.ERROR_WRONG_COLOR; }
+            else if (fromPiece.Color != drawing) { return Result.ERROR_WRONG_COLOR; }
             else if (!fromPiece.validDes(to)) { return Result.ERROR_INVALID_DES; }
             else
             {
                 //Sicherung falls check() true liefert
-                Figur toPiece = getFigur(to);
+                Piece toPiece = getPiece(to);
 
                 draw(from, to);
                 bool enPassantPerformed = handleEnPassant(fromPiece, from, to);
@@ -377,7 +377,7 @@ namespace Chess3000
                     return Result.ERROR_CHECK;
                 }
 
-                if (fromPiece.PieceType == PieceType.Bauer && (to.y == 7 || to.y == 0))
+                if (fromPiece.PieceType == PieceType.Pawn && (to.y == 7 || to.y == 0))
                 {
                     promote(to);
                 }
@@ -393,41 +393,41 @@ namespace Chess3000
             }
         }
 
-        private void setPiece(Pos pos, Figur piece)
+        private void setPiece(Pos pos, Piece piece)
         {
             if (piece != null)
             {
-                piece.Feld = m_schachbrett[pos.y][pos.x];
+                piece.Square = chessboard[pos.y][pos.x];
             }
 
-            m_schachbrett[pos.y][pos.x].figur = piece;
+            chessboard[pos.y][pos.x].piece = piece;
         }
 
         private void draw(Pos from, Pos to)
         {
-            setPiece(to, m_schachbrett[from.y][from.x].figur);
+            setPiece(to, chessboard[from.y][from.x].piece);
             setPiece(from, null);
         }
 
         //Änderungen rückgängig machen
-        private void reverse(Pos from, Pos to, Figur fromPiece, Figur toPiece)
+        private void reverse(Pos from, Pos to, Piece fromPiece, Piece toPiece)
         {
             setPiece(from, fromPiece);
             setPiece(to, toPiece);
         }
 
-        private bool handleCastling(Figur fromPiece, Pos from, Pos to)
+        private bool handleCastling(Piece fromPiece, Pos from, Pos to)
         {
             bool toWhiteCastlingPos = to.Equals(WHITE_KING_SHORT_CASTLING_POS) ||
                                       to.Equals(WHITE_KING_LONG_CASTLING_POS);
-            bool whiteCastling = fromPiece.PieceType == PieceType.Koenig &&
-                                 from.Equals(WHITE_KING_START_POS) &&
+            bool whiteCastling = fromPiece.PieceType == PieceType.King &&
+                                 from.Equals(White_KING_START_POS) &&
                                  toWhiteCastlingPos;
 
             bool toBlackCastlingPos = to.Equals(BLACK_KING_SHORT_CASTLING_POS) ||
                                       to.Equals(BLACK_KING_LONG_CASTLING_POS);
-            bool blackCastling = fromPiece.PieceType == PieceType.Koenig &&
-                                 from.Equals(BLACK_KING_START_POS) &&
+            bool blackCastling = fromPiece.PieceType == PieceType.King &&
+                                 from.Equals(Black_KING_START_POS) &&
                                  toBlackCastlingPos;
 
             if (whiteCastling || blackCastling)
@@ -440,7 +440,7 @@ namespace Chess3000
             return false;
         }
 
-        //Schachprüfung hier nicht nötig, da dies bereits in Koenig.checkForCastling() durchgeführt wurde
+        //Schachprüfung hier nicht nötig, da dies bereits in King.checkForCastling() durchgeführt wurde
         private void castlingSecondStep(Pos kingCastlingPos)
         {
             if (kingCastlingPos.Equals(WHITE_KING_SHORT_CASTLING_POS))
@@ -462,26 +462,26 @@ namespace Chess3000
             updatePossibleDestinations();
         }
 
-        private bool updateCastlingAvailability(Figur fromPiece, Pos from)
+        private bool updateCastlingAvailability(Piece fromPiece, Pos from)
         {
             bool situationChanged = false;
-            if (drawing == Farbe.WEISS)
+            if (drawing == Color.White)
             {
-                if (fromPiece.PieceType == PieceType.Koenig &&
-                    from.Equals(WHITE_KING_START_POS))
+                if (fromPiece.PieceType == PieceType.King &&
+                    from.Equals(White_KING_START_POS))
                 {
                     whiteKingMoved = true;
                     situationChanged = true;
                 }
 
-                if (fromPiece.PieceType == PieceType.Turm &&
+                if (fromPiece.PieceType == PieceType.Rook &&
                     from.Equals(WHITE_ROOK_SHORT_START_POS))
                 {
                     whiteShortRookMoved = true;
                     situationChanged = true;
                 }
 
-                if (fromPiece.PieceType == PieceType.Turm &&
+                if (fromPiece.PieceType == PieceType.Rook &&
                     from.Equals(WHITE_ROOK_LONG_START_POS))
                 {
                     whiteLongRookMoved = true;
@@ -490,21 +490,21 @@ namespace Chess3000
             }
             else
             {
-                if (fromPiece.PieceType == PieceType.Koenig &&
-                    from.Equals(BLACK_KING_START_POS))
+                if (fromPiece.PieceType == PieceType.King &&
+                    from.Equals(Black_KING_START_POS))
                 {
                     blackKingMoved = true;
                     situationChanged = true;
                 }
 
-                if (fromPiece.PieceType == PieceType.Turm &&
+                if (fromPiece.PieceType == PieceType.Rook &&
                     from.Equals(BLACK_ROOK_SHORT_START_POS))
                 {
                     blackShortRookMoved = true;
                     situationChanged = true;
                 }
 
-                if (fromPiece.PieceType == PieceType.Turm &&
+                if (fromPiece.PieceType == PieceType.Rook &&
                     from.Equals(BLACK_ROOK_LONG_START_POS))
                 {
                     blackLongRookMoved = true;
@@ -522,8 +522,8 @@ namespace Chess3000
         private void promote(Pos pos)
         {
             MessageBoxResult res = MessageBox.Show(
-                "Soll der Bauer durch eine Dame ersetzt werden?\n" +
-                "Wenn nicht wird er durch einen Springer ersetzt",
+                "Soll der Pawn durch eine Queen ersetzt werden?\n" +
+                "Wenn nicht wird er durch einen Knight ersetzt",
                 "Beförderung",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question
@@ -531,20 +531,20 @@ namespace Chess3000
 
             if (res == MessageBoxResult.Yes)
             {
-                m_schachbrett[pos.y][pos.x].figur = new Dame(drawing,
-                                                             m_schachbrett[pos.y][pos.x],
+                chessboard[pos.y][pos.x].piece = new Queen(drawing,
+                                                             chessboard[pos.y][pos.x],
                                                              this);
             }
             else
             {
-                m_schachbrett[pos.y][pos.x].figur = new Springer(drawing,
-                                                                 m_schachbrett[pos.y][pos.x],
+                chessboard[pos.y][pos.x].piece = new Knight(drawing,
+                                                                 chessboard[pos.y][pos.x],
                                                                  this);
             }
             updatePossibleDestinations();
         }
 
-        private bool handleEnPassant(Figur fromPiece, Pos from, Pos to)
+        private bool handleEnPassant(Piece fromPiece, Pos from, Pos to)
         {
             enPassantPiece = null;
             enPassantPiecePos = null;
@@ -554,7 +554,7 @@ namespace Chess3000
 
             if (enPassantAllowed && to.Equals(enPassantPos) && isEligiblePawn)
             {
-                if (drawing == Farbe.WEISS)
+                if (drawing == Color.White)
                 {
                     enPassantPiecePos = new Pos(enPassantPos.y - 1, enPassantPos.x);
                 }
@@ -563,9 +563,9 @@ namespace Chess3000
                     enPassantPiecePos = new Pos(enPassantPos.y + 1, enPassantPos.x);
                 }
 
-                enPassantPiece = getFigur(enPassantPiecePos);
+                enPassantPiece = getPiece(enPassantPiecePos);
 
-                //beim En Passent wird eine Figur entfernt auf deren Position nicht gezogen wurde
+                //beim En Passent wird eine Piece entfernt auf deren Position nicht gezogen wurde
                 setPiece(enPassantPiecePos, null);
 
                 return true;
@@ -578,23 +578,23 @@ namespace Chess3000
         {
             eligiblePawn1 = null;
             eligiblePawn2 = null;
-            Figur piece = getFigur(currentPos);
+            Piece piece = getPiece(currentPos);
 
-            if (piece.PieceType == PieceType.Bauer)
+            if (piece.PieceType == PieceType.Pawn)
             {
-                if (drawing == Farbe.WEISS)
+                if (drawing == Color.White)
                 {
                     if (currentPos.y == 3 && formerPos.y == 1)
                     {
                         if (currentPos.x + 1 <= 7)
                         {
                             //Kann null werden
-                            eligiblePawn1 = getFigur(new Pos(currentPos.y, currentPos.x + 1));
+                            eligiblePawn1 = getPiece(new Pos(currentPos.y, currentPos.x + 1));
                         }
                         if (currentPos.x - 1 >= 0)
                         {
                             //Kann null werden
-                            eligiblePawn2 = getFigur(new Pos(currentPos.y, currentPos.x - 1));
+                            eligiblePawn2 = getPiece(new Pos(currentPos.y, currentPos.x - 1));
                         }
 
                         if (eligiblePawn1 != null || eligiblePawn2 != null)
@@ -613,12 +613,12 @@ namespace Chess3000
                         if (currentPos.x + 1 <= 7)
                         {
                             //Kann null werden
-                            eligiblePawn1 = getFigur(new Pos(currentPos.y, currentPos.x + 1));
+                            eligiblePawn1 = getPiece(new Pos(currentPos.y, currentPos.x + 1));
                         }
                         if (currentPos.x - 1 >= 0)
                         {
                             //Kann null werden
-                            eligiblePawn2 = getFigur(new Pos(currentPos.y, currentPos.x - 1));
+                            eligiblePawn2 = getPiece(new Pos(currentPos.y, currentPos.x - 1));
                         }
 
                         if (eligiblePawn1 != null || eligiblePawn2 != null)
@@ -637,16 +637,16 @@ namespace Chess3000
             return enPassantAllowed;
         }
 
-        public Figur getFigur( Pos pos )
+        public Piece getPiece(Pos pos)
         {
-            return m_schachbrett[pos.y][pos.x].figur;
+            return chessboard[pos.y][pos.x].piece;
         }
 
         private void endTurn(Pos from, Pos to)
         {
             lastFrom = from;
             lastTo = to;
-            drawing = (drawing == Farbe.WEISS ? Farbe.SCHWARZ : Farbe.WEISS);
+            drawing = (drawing == Color.White ? Color.Black : Color.White);
         }
     }
 }

@@ -46,15 +46,11 @@ namespace Chess3000
 
         private void DrawButton_Click(object sender, RoutedEventArgs e)
         {
-            // Pos from = new Pos(-1, -1);
-            // Pos to = new Pos(-1, -1);
-
-
-
             Result res = chessMaster.move(
                 FromComboBox.Items[FromComboBox.SelectedIndex] as Chess3000.Pos,
                 ToComboBox.Items[ToComboBox.SelectedIndex] as Chess3000.Pos
                 );
+
             if (res != Result.SUCCESS)
             {
                 switch (res)
@@ -87,7 +83,7 @@ namespace Chess3000
         private void showDrawingPlayer()
         {
             if (chessMaster == null) { return; }
-            if (chessMaster.Drawing == Farbe.WEISS)
+            if (chessMaster.Drawing == Color.White)
             {
                 DrawingRect.Fill = new SolidColorBrush(Colors.White);
             }

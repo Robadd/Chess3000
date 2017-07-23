@@ -8,7 +8,7 @@ namespace Chess3000
 {
     public class Pos
     {
-        public Pos( int y_val, int x_val)
+        public Pos(int y_val, int x_val)
         {
             y = y_val;
             x = x_val;
