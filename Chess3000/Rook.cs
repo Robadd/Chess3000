@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace Chess3000
 {
-    class Turm : Figur
+    class Rook : Piece
     {
-        public Turm(Farbe farbe, Feld feld, ChessMaster ChessMaster) : base(farbe, feld, ChessMaster)
+        public Rook(Color color, Square square, ChessMaster chessMaster) : base(color, square, chessMaster)
         {
-            pieceType = Chess3000.PieceType.Turm;
+            pieceType = Chess3000.PieceType.Rook;
         }
 
         public override void updatePosDes()
         {
+            possibleDestinations.Clear();
+
             for (int y = Pos.y + 1; y <= 7; y++)
             {
                 if (!addToPosDes(new Pos(y, Pos.x))) { break; }

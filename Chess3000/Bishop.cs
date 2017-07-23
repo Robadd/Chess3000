@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 
 namespace Chess3000
 {
-    class Laeufer : Figur
+    class Bishop : Piece
     {
-        public Laeufer(Farbe farbe, Feld feld, ChessMaster ChessMaster) : base(farbe, feld, ChessMaster)
+        public Bishop(Color color, Square square, ChessMaster chessMaster) : base(color, square, chessMaster)
         {
-            pieceType = Chess3000.PieceType.Laeufer;
+            pieceType = Chess3000.PieceType.Bishop;
         }
 
         public override void updatePosDes()
         {
+            possibleDestinations.Clear();
 
             for (int y = Pos.y + 1, x = Pos.x + 1; y <= 7 && x <= 7; y++, x++)
             {
@@ -43,22 +44,22 @@ namespace Chess3000
         {
             for (int y = pos.y + 1, x = pos.x + 1; y <= 7 && x <= 7; y++, x++)
             {
-                moeglicheZiele.Add(new Pos(y, x));
+                possibleDestinations.Add(new Pos(y, x));
             }
 
             for (int y = pos.y - 1, x = pos.x - 1; y >= 0 && x >= 0; y--, x--)
             {
-                moeglicheZiele.Add(new Pos(y, x));
+                possibleDestinations.Add(new Pos(y, x));
             }
 
             for (int y = pos.y + 1, x = pos.x - 1; y <= 7 && x >= 0; y++, x--)
             {
-                moeglicheZiele.Add(new Pos(y, x));
+                possibleDestinations.Add(new Pos(y, x));
             }
 
             for (int y = pos.y - 1, x = pos.x + 1; y >= 0 && x <= 7; y--, x++)
             {
-                moeglicheZiele.Add(new Pos(y, x));
+                possibleDestinations.Add(new Pos(y, x));
             }
         }
         */

@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace Chess3000
 {
-    class Springer : Figur
+    class Knight : Piece
     {
-        public Springer(Farbe farbe, Feld feld, ChessMaster ChessMaster) : base(farbe, feld, ChessMaster)
+        public Knight(Color color, Square square, ChessMaster chessMaster) : base(color, square, chessMaster)
         {
-            pieceType = Chess3000.PieceType.Springer;
+            pieceType = Chess3000.PieceType.Knight;
         }
 
         public override void updatePosDes()
         {
+            possibleDestinations.Clear();
+
             int y = Pos.y + 2;
             int x = Pos.x + 1;
             if (y <= 7 && x <= 7)

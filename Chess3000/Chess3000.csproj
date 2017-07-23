@@ -81,13 +81,20 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ChessMaster.cs" />
-    <Compile Include="Dame.cs" />
-    <Compile Include="Feld.cs" />
-    <Compile Include="Koenig.cs" />
-    <Compile Include="Laeufer.cs" />
+    <Compile Include="Queen.cs" />
+    <Compile Include="Square.cs" />
+    <Compile Include="King.cs" />
+    <Compile Include="Bishop.cs" />
+    <Compile Include="TestWindow.xaml.cs">
+      <DependentUpon>TestWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pos.cs" />
-    <Compile Include="Springer.cs" />
-    <Compile Include="Turm.cs" />
+    <Compile Include="Knight.cs" />
+    <Compile Include="Rook.cs" />
+    <Page Include="TestWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -96,8 +103,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Bauer.cs" />
-    <Compile Include="Figur.cs" />
+    <Compile Include="Pawn.cs" />
+    <Compile Include="Piece.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
