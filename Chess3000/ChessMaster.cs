@@ -522,8 +522,8 @@ namespace Chess3000
         private void promote(Pos pos)
         {
             MessageBoxResult res = MessageBox.Show(
-                "Soll der Pawn durch eine Queen ersetzt werden?\n" +
-                "Wenn nicht wird er durch einen Knight ersetzt",
+                "Soll der Bauer durch eine Dame ersetzt werden?\n" +
+                "Wenn nicht wird er durch einen Springer ersetzt",
                 "Beförderung",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question
@@ -532,14 +532,14 @@ namespace Chess3000
             if (res == MessageBoxResult.Yes)
             {
                 chessboard[pos.y][pos.x].piece = new Queen(drawing,
-                                                             chessboard[pos.y][pos.x],
-                                                             this);
+                                                           chessboard[pos.y][pos.x],
+                                                           this);
             }
             else
             {
                 chessboard[pos.y][pos.x].piece = new Knight(drawing,
-                                                                 chessboard[pos.y][pos.x],
-                                                                 this);
+                                                            chessboard[pos.y][pos.x],
+                                                            this);
             }
             updatePossibleDestinations();
         }
