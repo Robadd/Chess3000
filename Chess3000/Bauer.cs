@@ -108,8 +108,8 @@ namespace Chess3000
 
             if (master.EligiblePawn1 != null && master.EligiblePawn1.Equals(this) || master.EligiblePawn2 != null && master.EligiblePawn2.Equals(this))
             {
-                moeglicheZiele.Add(master.EnPassentPos);
-                capDes.Add(master.EnPassentPos);
+                moeglicheZiele.Add(master.EnPassantPos);
+                capDes.Add(master.EnPassantPos);
             }
         }
 

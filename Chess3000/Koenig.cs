@@ -70,10 +70,10 @@ namespace Chess3000
             }
 
             //moeglicheZiele = master.filterCheckedFields(PosDes, this.Farbe);
-            checkForRochade();
+            checkForCastling();
         }
 
-        private void checkForRochade()
+        private void checkForCastling()
         {
             if (!master.check(this.Farbe, this.Pos))
             {
@@ -81,7 +81,7 @@ namespace Chess3000
                 {
                     if (!master.whiteKingMoved)
                     {
-                        //Kurze Rochade
+                        //Kurze Castling
                         if (!master.whiteShortRookMoved)
                         {
                             //Beide Felder leer
@@ -95,7 +95,7 @@ namespace Chess3000
                                 }
                             }
                         }
-                        //Lange Rochade
+                        //Lange Castling
                         if (!master.whiteLongRookMoved)
                         {
                             //Beide Felder leer
@@ -116,7 +116,7 @@ namespace Chess3000
                 {
                     if (!master.blackKingMoved)
                     {
-                        //Kurze Rochade
+                        //Kurzes Castling
                         if (!master.blackShortRookMoved)
                         {
                             //Beide Felder leer
@@ -130,7 +130,7 @@ namespace Chess3000
                                 }
                             }
                         }
-                        //Lange Rochade
+                        //Langes Castling
                         if (!master.blackLongRookMoved)
                         {
                             //Beide Felder leer

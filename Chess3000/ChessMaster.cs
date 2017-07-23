@@ -21,12 +21,10 @@ namespace Chess3000
     {
         Feld[][] m_schachbrett;
         Chess3000.Farbe drawing = Farbe.WEISS;
-        Pos enPassentPos;
-        bool enPassentAllowed = false;
+        Pos enPassantPos;
+        bool enPassantAllowed = false;
         Figur eligiblePawn1 = null;
         Figur eligiblePawn2 = null;
-//        public bool whiteRochadeAllowed = true;
-//        public bool blackRochadeAllowed = true;
         public bool whiteKingMoved = false;
         public bool blackKingMoved = false;
         public bool whiteShortRookMoved = false;
@@ -39,18 +37,18 @@ namespace Chess3000
         readonly Pos BLACK_ROOK_SHORT_START_POS = new Pos(7, 7);
         readonly Pos WHITE_ROOK_LONG_START_POS = new Pos(0, 0);
         readonly Pos BLACK_ROOK_LONG_START_POS = new Pos(7, 0);
-        readonly Pos WHITE_KING_SHORT_ROCHADE_POS = new Pos(0, 6);
-        readonly Pos BLACK_KING_SHORT_ROCHADE_POS = new Pos(7, 6);
-        readonly Pos WHITE_KING_LONG_ROCHADE_POS = new Pos(0, 2);
-        readonly Pos BLACK_KING_LONG_ROCHADE_POS = new Pos(7, 2);
-        readonly Pos WHITE_ROOK_SHORT_ROCHADE_POS = new Pos(0, 5);
-        readonly Pos BLACK_ROOK_SHORT_ROCHADE_POS = new Pos(7, 5);
-        readonly Pos WHITE_ROOK_LONG_ROCHADE_POS = new Pos(0, 3);
-        readonly Pos BLACK_ROOK_LONG_ROCHADE_POS = new Pos(7, 3);
+        readonly Pos WHITE_KING_SHORT_CASTLING_POS = new Pos(0, 6);
+        readonly Pos BLACK_KING_SHORT_CASTLING_POS = new Pos(7, 6);
+        readonly Pos WHITE_KING_LONG_CASTLING_POS = new Pos(0, 2);
+        readonly Pos BLACK_KING_LONG_CASTLING_POS = new Pos(7, 2);
+        readonly Pos WHITE_ROOK_SHORT_CASTLING_POS = new Pos(0, 5);
+        readonly Pos BLACK_ROOK_SHORT_CASTLING_POS = new Pos(7, 5);
+        readonly Pos WHITE_ROOK_LONG_CASTLING_POS = new Pos(0, 3);
+        readonly Pos BLACK_ROOK_LONG_CASTLING_POS = new Pos(7, 3);
 
-        public Pos EnPassentPos
+        public Pos EnPassantPos
         {
-            get { return enPassentPos; }
+            get { return enPassantPos; }
         }
 
         public Figur EligiblePawn1
@@ -70,7 +68,7 @@ namespace Chess3000
 
             createInitialBoardState();
 
-            checkTest();
+            castlingTest();
         }
 
         private void checkTest()
@@ -128,7 +126,7 @@ namespace Chess3000
             Console.WriteLine("#####################");
         }
 
-        private void rochadeTest()
+        private void castlingTest()
         {
             Result res;
             Console.WriteLine("#####################");
@@ -321,29 +319,29 @@ namespace Chess3000
             else
             {
                 Figur toPiece = getFigur(to);
-                Figur enPassentPiece = null;
-                Pos enPassentPiecePos = null;
+                Figur enPassantPiece = null;
+                Pos enPassantPiecePos = null;
 
                 bool isEligiblePawn = EligiblePawn1 != null && fromPiece.Equals(EligiblePawn1) ||
                                       EligiblePawn2 != null && fromPiece.Equals(EligiblePawn2);
 
-                if (enPassentAllowed && to.Equals(enPassentPos) && isEligiblePawn)
+                if (enPassantAllowed && to.Equals(enPassantPos) && isEligiblePawn)
                 {
                     draw(from, to);
 
                     if (drawing == Farbe.WEISS)
                     {
-                        enPassentPiecePos = new Pos(enPassentPos.y - 1, enPassentPos.x);
+                        enPassantPiecePos = new Pos(enPassantPos.y - 1, enPassantPos.x);
                     }
                     else
                     {
-                        enPassentPiecePos = new Pos(enPassentPos.y + 1, enPassentPos.x);
+                        enPassantPiecePos = new Pos(enPassantPos.y + 1, enPassantPos.x);
                     }
 
-                    enPassentPiece = getFigur(enPassentPiecePos);
+                    enPassantPiece = getFigur(enPassantPiecePos);
 
                     //beim En Passent wird eine Figur entfernt auf deren Position nicht gezogen wurde
-                    setPiece(enPassentPiecePos, null);
+                    setPiece(enPassantPiecePos, null);
                 }
                 else
                 {
@@ -357,9 +355,9 @@ namespace Chess3000
                     //Änderungen rückgängig machen
                     reverse(from, to, fromPiece, toPiece);
 
-                    if (enPassentAllowed && to.Equals(enPassentPos) && isEligiblePawn)
+                    if (enPassantAllowed && to.Equals(enPassantPos) && isEligiblePawn)
                     {
-                        setPiece(enPassentPiecePos, enPassentPiece);
+                        setPiece(enPassantPiecePos, enPassantPiece);
                     }
 
                     updatePossibleDestinations();
@@ -372,10 +370,12 @@ namespace Chess3000
                     promote(to);
                 }
 
-                rochadeDoubleDraw(fromPiece, from, to);
-                determineRochadeSituation(fromPiece, from);
-                allowEnPassentNextTime(from, to);
-                endDraw();
+                castling(fromPiece, from, to);
+
+                updateCastlingAvailability(fromPiece, from);
+                updateEnPassantAvailability(from, to);
+
+                endTurn();
 
                 return Result.SUCCESS;
             }
@@ -387,6 +387,7 @@ namespace Chess3000
             {
                 piece.Feld = m_schachbrett[pos.y][pos.x];
             }
+
             m_schachbrett[pos.y][pos.x].figur = piece;
         }
 
@@ -403,35 +404,53 @@ namespace Chess3000
             setPiece(to, toPiece);
         }
 
-        //Schachprüfung hier nicht nötig, da dies bereits Koenig.checkForRochade() durchgeführt wurde
-        private void rochadeDoubleDraw(Figur fromPiece, Pos from, Pos to)
+        private bool castling(Figur fromPiece, Pos from, Pos to)
         {
-            if (fromPiece.PieceType == PieceType.Koenig)
+            bool toWhiteCastlingPos = to.Equals(WHITE_KING_SHORT_CASTLING_POS) ||
+                                      to.Equals(WHITE_KING_LONG_CASTLING_POS);
+            bool whiteCastling = fromPiece.PieceType == PieceType.Koenig &&
+                                 from.Equals(WHITE_KING_START_POS) &&
+                                 toWhiteCastlingPos;
+
+            bool toBlackCastlingPos = to.Equals(BLACK_KING_SHORT_CASTLING_POS) ||
+                                      to.Equals(BLACK_KING_LONG_CASTLING_POS);
+            bool blackCastling = fromPiece.PieceType == PieceType.Koenig &&
+                                 from.Equals(BLACK_KING_START_POS) &&
+                                 toBlackCastlingPos;
+
+            if (whiteCastling || blackCastling)
             {
-                if (from.Equals(WHITE_KING_START_POS) && to.Equals(WHITE_KING_SHORT_ROCHADE_POS))
-                {
-                    draw(WHITE_ROOK_SHORT_START_POS, WHITE_ROOK_SHORT_ROCHADE_POS);
-                    updatePossibleDestinations();
-                }
-                else if (from.Equals(WHITE_KING_START_POS) && to.Equals(WHITE_KING_LONG_ROCHADE_POS))
-                {
-                    draw(WHITE_ROOK_LONG_START_POS, WHITE_ROOK_LONG_ROCHADE_POS);
-                    updatePossibleDestinations();
-                }
-                else if (from.Equals(BLACK_KING_START_POS) && to.Equals(BLACK_KING_SHORT_ROCHADE_POS))
-                {
-                    draw(BLACK_ROOK_SHORT_START_POS, BLACK_ROOK_SHORT_ROCHADE_POS);
-                    updatePossibleDestinations();
-                }
-                else if (from.Equals(BLACK_KING_START_POS) && to.Equals(BLACK_KING_LONG_ROCHADE_POS))
-                {
-                    draw(BLACK_ROOK_LONG_START_POS, BLACK_ROOK_LONG_ROCHADE_POS);
-                    updatePossibleDestinations();
-                }
+                castlingSecondStep(to);
+
+                return true;
             }
+
+            return false;
         }
 
-        private bool determineRochadeSituation(Figur fromPiece, Pos from)
+        //Schachprüfung hier nicht nötig, da dies bereits in Koenig.checkForCastling() durchgeführt wurde
+        private void castlingSecondStep(Pos kingCastlingPos)
+        {
+            if (kingCastlingPos.Equals(WHITE_KING_SHORT_CASTLING_POS))
+            {
+                draw(WHITE_ROOK_SHORT_START_POS, WHITE_ROOK_SHORT_CASTLING_POS);               
+            }
+            else if (kingCastlingPos.Equals(WHITE_KING_LONG_CASTLING_POS))
+            {
+                draw(WHITE_ROOK_LONG_START_POS, WHITE_ROOK_LONG_CASTLING_POS);
+            }
+            else if (kingCastlingPos.Equals(BLACK_KING_SHORT_CASTLING_POS))
+            {
+                draw(BLACK_ROOK_SHORT_START_POS, BLACK_ROOK_SHORT_CASTLING_POS);
+            }
+            else if (kingCastlingPos.Equals(BLACK_KING_LONG_CASTLING_POS))
+            {
+                draw(BLACK_ROOK_LONG_START_POS, BLACK_ROOK_LONG_CASTLING_POS);
+            }
+            updatePossibleDestinations();
+        }
+
+        private bool updateCastlingAvailability(Figur fromPiece, Pos from)
         {
             bool situationChanged = false;
             if (drawing == Farbe.WEISS)
@@ -513,7 +532,7 @@ namespace Chess3000
             updatePossibleDestinations();
         }
 
-        private bool allowEnPassentNextTime(Pos formerPos, Pos currentPos)
+        private bool updateEnPassantAvailability(Pos formerPos, Pos currentPos)
         {
             eligiblePawn1 = null;
             eligiblePawn2 = null;
@@ -527,19 +546,21 @@ namespace Chess3000
                     {
                         if (currentPos.x + 1 <= 7)
                         {
+                            //Kann null werden
                             eligiblePawn1 = getFigur(new Pos(currentPos.y, currentPos.x + 1));
                         }
                         if (currentPos.x - 1 >= 0)
                         {
+                            //Kann null werden
                             eligiblePawn2 = getFigur(new Pos(currentPos.y, currentPos.x - 1));
                         }
 
                         if (eligiblePawn1 != null || eligiblePawn2 != null)
                         {
-                            enPassentPos = new Pos(currentPos.y - 1, currentPos.x);
-                            enPassentAllowed = true;
+                            enPassantPos = new Pos(currentPos.y - 1, currentPos.x);
+                            enPassantAllowed = true;
                             updatePossibleDestinations();
-                            return enPassentAllowed;
+                            return enPassantAllowed;
                         }
                     }
                 }
@@ -549,26 +570,29 @@ namespace Chess3000
                     {
                         if (currentPos.x + 1 <= 7)
                         {
+                            //Kann null werden
                             eligiblePawn1 = getFigur(new Pos(currentPos.y, currentPos.x + 1));
                         }
                         if (currentPos.x - 1 >= 0)
                         {
+                            //Kann null werden
                             eligiblePawn2 = getFigur(new Pos(currentPos.y, currentPos.x - 1));
                         }
 
                         if (eligiblePawn1 != null || eligiblePawn2 != null)
                         {
-                            enPassentPos = new Pos(currentPos.y + 1, currentPos.x);
-                            enPassentAllowed = true;
+                            enPassantPos = new Pos(currentPos.y + 1, currentPos.x);
+                            enPassantAllowed = true;
                             updatePossibleDestinations();
-                            return enPassentAllowed;
+                            return enPassantAllowed;
                         }
                     }
                 }
             }
-            enPassentAllowed = false;
+
+            enPassantAllowed = false;
             updatePossibleDestinations(); //Nötig?
-            return enPassentAllowed;
+            return enPassantAllowed;
         }
 
         public Figur getFigur( Pos pos )
@@ -576,7 +600,7 @@ namespace Chess3000
             return m_schachbrett[pos.y][pos.x].figur;
         }
 
-        private void endDraw()
+        private void endTurn()
         {
             drawing = (drawing == Farbe.WEISS ? Farbe.SCHWARZ : Farbe.WEISS);
         }
