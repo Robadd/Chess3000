@@ -21,7 +21,7 @@ namespace Chess3000
     {
         Feld[][] m_schachbrett;
         Chess3000.Farbe drawing = Farbe.WEISS;
-        Pos enPassantPos;
+        Pos enPassantPos = null;
         Pos enPassantPiecePos = null;
         Figur enPassantPiece = null;
         bool enPassantAllowed = false;
@@ -47,6 +47,8 @@ namespace Chess3000
         readonly Pos BLACK_ROOK_SHORT_CASTLING_POS = new Pos(7, 5);
         readonly Pos WHITE_ROOK_LONG_CASTLING_POS = new Pos(0, 3);
         readonly Pos BLACK_ROOK_LONG_CASTLING_POS = new Pos(7, 3);
+        Pos lastFrom;
+        Pos lastTo;
 
         public Pos EnPassantPos
         {
@@ -171,8 +173,35 @@ namespace Chess3000
             get { return drawing; }
         }
 
+        //Achtung: Am Anfang null!
+        public Pos LastFrom
+        {
+            get { return lastFrom; }
+        }
+
+        //Achtung: Am Anfang null!
+        public Pos LastTo
+        {
+            get { return lastTo; }
+        }
+
         private void createInitialBoardState()
         {
+            drawing = Farbe.WEISS;
+            enPassantPos = null;
+            enPassantPiecePos = null;
+            enPassantPiece = null;
+            enPassantAllowed = false;
+            eligiblePawn1 = null;
+            eligiblePawn2 = null;
+            whiteKingMoved = false;
+            blackKingMoved = false;
+            whiteShortRookMoved = false;
+            blackShortRookMoved = false;
+            whiteLongRookMoved = false;
+            blackLongRookMoved = false;
+            lastFrom = null;
+            lastTo = null;
             m_schachbrett = new Feld[8][];
 
             for (int y = 0; y < 8; y++)
@@ -312,6 +341,11 @@ namespace Chess3000
             return posDes;
         }
 
+        public void reset()
+        {
+            createInitialBoardState();
+        }
+
         public Chess3000.Result move( Pos from, Pos to)
         {
             Figur fromPiece = getFigur(from);
@@ -320,7 +354,9 @@ namespace Chess3000
             else if (!fromPiece.validDes(to)) { return Result.ERROR_INVALID_DES; }
             else
             {
+                //Sicherung falls check() true liefert
                 Figur toPiece = getFigur(to);
+
                 draw(from, to);
                 bool enPassantPerformed = handleEnPassant(fromPiece, from, to);
                 
@@ -351,7 +387,7 @@ namespace Chess3000
                 updateCastlingAvailability(fromPiece, from);
                 updateEnPassantAvailability(from, to);
 
-                endTurn();
+                endTurn(from, to);
 
                 return Result.SUCCESS;
             }
@@ -606,8 +642,10 @@ namespace Chess3000
             return m_schachbrett[pos.y][pos.x].figur;
         }
 
-        private void endTurn()
+        private void endTurn(Pos from, Pos to)
         {
+            lastFrom = from;
+            lastTo = to;
             drawing = (drawing == Farbe.WEISS ? Farbe.SCHWARZ : Farbe.WEISS);
         }
     }

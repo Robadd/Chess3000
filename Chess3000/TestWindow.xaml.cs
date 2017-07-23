@@ -81,6 +81,7 @@ namespace Chess3000
             }
 
             showDrawingPlayer();
+            showLastDraw();
         }
 
         private void showDrawingPlayer()
@@ -94,6 +95,34 @@ namespace Chess3000
             {
                 DrawingRect.Fill = new SolidColorBrush(Colors.Black);
             }
+        }
+
+        private void showLastDraw()
+        {
+            if (chessMaster.LastFrom != null)
+            {
+                LastFromTextBlock.Text = chessMaster.LastFrom.ToString();
+            }
+            else
+            {
+                LastFromTextBlock.Text = "";
+            }
+
+            if (chessMaster.LastTo != null)
+            {
+                LastToTextBlock.Text = chessMaster.LastTo.ToString();
+            }
+            else
+            {
+                LastToTextBlock.Text = "";
+            }
+        }
+
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            chessMaster.reset();
+            showDrawingPlayer();
+            showLastDraw();
         }
     }
 }

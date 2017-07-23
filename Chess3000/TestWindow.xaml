@@ -13,5 +13,10 @@
         <ComboBox Name="ToComboBox" HorizontalAlignment="Left" Margin="46,45,0,0" VerticalAlignment="Top" Width="120"/>
         <Button Name="DrawButton" Content="_draw" HorizontalAlignment="Left" Margin="91,87,0,0" VerticalAlignment="Top" Width="75" Click="DrawButton_Click"/>
         <Rectangle Name="DrawingRect" HorizontalAlignment="Left" Height="100" Margin="213,10,0,0" Stroke="Black" VerticalAlignment="Top" Width="100"/>
+        <Label Content="Last_From:" Target="{Binding ElementName=LastFromTextBlock}" HorizontalAlignment="Left" Margin="10,138,0,0" VerticalAlignment="Top"/>
+        <Label Content="Last_To:" Target="{Binding ElementName=LastToTextBlock}" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top"/>
+        <TextBlock Name="LastFromTextBlock" HorizontalAlignment="Left" Margin="76,143,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock x:Name="LastToTextBlock" HorizontalAlignment="Left" Margin="76,165,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <Button x:Name="ResetButton" Content="_reset" HorizontalAlignment="Left" Margin="238,159,0,0" VerticalAlignment="Top" Width="75" Click="ResetButton_Click"/>
     </Grid>
 </Window>
