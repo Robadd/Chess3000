@@ -67,14 +67,14 @@ namespace Chess3000
 
         public ChessMaster()
         {
+#if DEBUG
             //Damit frühere Züge noch nachgelesen werden können
             Console.BufferHeight = (Int16)(Int16.MaxValue / 4.0);
-
+#endif
             createInitialBoardState();
-
-            castlingCheckTest();
         }
 
+#if DEBUG
         private void checkTest()
         {
             Result res;
@@ -236,6 +236,7 @@ namespace Chess3000
 
             Console.WriteLine("#####################");
         }
+#endif
 
         public Chess3000.Color Drawing
         {
@@ -318,8 +319,9 @@ namespace Chess3000
 
         private void updatePossibleDestinations()
         {
-            //Debug
+#if DEBUG
             Console.WriteLine("********************************************************");
+#endif
             for (int y = 0; y <= 7; y++)
             {
                 foreach (Square square in chessboard[y])
@@ -327,14 +329,14 @@ namespace Chess3000
                     if (square.piece != null)
                     {
                         square.piece.updatePosDes();
-
-                        //Debug
+#if DEBUG
                         Console.WriteLine("Piece: " + square.piece.PieceType.ToString());
                         Console.WriteLine("Color: " + square.piece.Color.ToString());
                         Console.WriteLine("Position: " + square.piece.currentPosString);
                         Console.WriteLine("Mögliche Ziele:");
                         Console.WriteLine(square.piece.PosDesString);
                         Console.WriteLine("");
+#endif
                     }
                 }
             }
