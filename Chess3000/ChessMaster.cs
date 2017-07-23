@@ -22,6 +22,8 @@ namespace Chess3000
         Feld[][] m_schachbrett;
         Chess3000.Farbe drawing = Farbe.WEISS;
         Pos enPassantPos;
+        Pos enPassantPiecePos = null;
+        Figur enPassantPiece = null;
         bool enPassantAllowed = false;
         Figur eligiblePawn1 = null;
         Figur eligiblePawn2 = null;
@@ -68,7 +70,7 @@ namespace Chess3000
 
             createInitialBoardState();
 
-            castlingTest();
+            enPassantTest();
         }
 
         private void checkTest()
@@ -88,7 +90,7 @@ namespace Chess3000
             Console.WriteLine("#####################");
         }
 
-        private void enPassenTest()
+        private void enPassantTest()
         {
             Result res;
             Console.WriteLine("#####################");
@@ -319,43 +321,17 @@ namespace Chess3000
             else
             {
                 Figur toPiece = getFigur(to);
-                Figur enPassantPiece = null;
-                Pos enPassantPiecePos = null;
-
-                bool isEligiblePawn = EligiblePawn1 != null && fromPiece.Equals(EligiblePawn1) ||
-                                      EligiblePawn2 != null && fromPiece.Equals(EligiblePawn2);
-
-                if (enPassantAllowed && to.Equals(enPassantPos) && isEligiblePawn)
-                {
-                    draw(from, to);
-
-                    if (drawing == Farbe.WEISS)
-                    {
-                        enPassantPiecePos = new Pos(enPassantPos.y - 1, enPassantPos.x);
-                    }
-                    else
-                    {
-                        enPassantPiecePos = new Pos(enPassantPos.y + 1, enPassantPos.x);
-                    }
-
-                    enPassantPiece = getFigur(enPassantPiecePos);
-
-                    //beim En Passent wird eine Figur entfernt auf deren Position nicht gezogen wurde
-                    setPiece(enPassantPiecePos, null);
-                }
-                else
-                {
-                    draw(from, to);
-                }
+                draw(from, to);
+                bool enPassantPerformed = handleEnPassant(fromPiece, from, to);
                 
                 updatePossibleDestinations();
 
+                //Eigener König würde im Schach stehen
                 if (check(drawing, getKingPosition(drawing)))
                 {
                     //Änderungen rückgängig machen
                     reverse(from, to, fromPiece, toPiece);
-
-                    if (enPassantAllowed && to.Equals(enPassantPos) && isEligiblePawn)
+                    if (enPassantPerformed)
                     {
                         setPiece(enPassantPiecePos, enPassantPiece);
                     }
@@ -370,7 +346,7 @@ namespace Chess3000
                     promote(to);
                 }
 
-                castling(fromPiece, from, to);
+                handleCastling(fromPiece, from, to);
 
                 updateCastlingAvailability(fromPiece, from);
                 updateEnPassantAvailability(from, to);
@@ -404,7 +380,7 @@ namespace Chess3000
             setPiece(to, toPiece);
         }
 
-        private bool castling(Figur fromPiece, Pos from, Pos to)
+        private bool handleCastling(Figur fromPiece, Pos from, Pos to)
         {
             bool toWhiteCastlingPos = to.Equals(WHITE_KING_SHORT_CASTLING_POS) ||
                                       to.Equals(WHITE_KING_LONG_CASTLING_POS);
@@ -530,6 +506,36 @@ namespace Chess3000
                                                                  this);
             }
             updatePossibleDestinations();
+        }
+
+        private bool handleEnPassant(Figur fromPiece, Pos from, Pos to)
+        {
+            enPassantPiece = null;
+            enPassantPiecePos = null;
+
+            bool isEligiblePawn = EligiblePawn1 != null && fromPiece.Equals(EligiblePawn1) ||
+                                  EligiblePawn2 != null && fromPiece.Equals(EligiblePawn2);
+
+            if (enPassantAllowed && to.Equals(enPassantPos) && isEligiblePawn)
+            {
+                if (drawing == Farbe.WEISS)
+                {
+                    enPassantPiecePos = new Pos(enPassantPos.y - 1, enPassantPos.x);
+                }
+                else
+                {
+                    enPassantPiecePos = new Pos(enPassantPos.y + 1, enPassantPos.x);
+                }
+
+                enPassantPiece = getFigur(enPassantPiecePos);
+
+                //beim En Passent wird eine Figur entfernt auf deren Position nicht gezogen wurde
+                setPiece(enPassantPiecePos, null);
+
+                return true;
+            }
+
+            return false;
         }
 
         private bool updateEnPassantAvailability(Pos formerPos, Pos currentPos)
