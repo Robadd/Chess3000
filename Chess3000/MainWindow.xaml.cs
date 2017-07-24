@@ -26,7 +26,7 @@ namespace Chess3000
         private ChessMaster master;
         private bool[,] AddedPieces = new bool[8,8];
         private Rectangle[,] tiles = new Rectangle[8, 8];
-        private Collection<TagVisualizationDefinition> TagDefs;
+        private Collection<TagVisualizationDefinition> TagDefs
 
         public enum BoardState {
             SETUP,
