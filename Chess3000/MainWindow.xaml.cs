@@ -288,15 +288,25 @@ namespace Chess3000
             xView = (int)(sender as Rectangle).GetValue(Grid.ColumnProperty);
             xMaster = 7 - yView;
             yMaster = 7 - xView;
-
+            player1.Text = "";
+            player2.Text = "";
             if(state == BoardState.IDLE)
             {
                 moveFrom = new Pos(yMaster, xMaster);
                 state = BoardState.MOVE_PENDING;
+
             }
             else if(state == BoardState.MOVE_PENDING)
             {
+                TextBlock msgBox = null;
+                if (master.Drawing == Color.White) msgBox = player1;
+                else if (master.Drawing == Color.Black) msgBox = player2;
                 moveTo = new Pos(yMaster, xMaster);
+                if(moveFrom.Equals(moveTo))
+                {
+                    state = BoardState.IDLE;
+                    return;
+                }
                 Result res = master.move(moveFrom, moveTo);
                 switch (res)
                 {
@@ -305,23 +315,23 @@ namespace Chess3000
                         state = BoardState.IDLE;
                         break;
                     case Result.ERROR_CHECK:
-                        MessageBox.Show("ERROR_CHECK");
+                        msgBox.Text = "Du stehst im Schach!";
                         state = BoardState.IDLE;
                         break;
                     case Result.ERROR_INVALID_DES:
-                        MessageBox.Show("ERROR_INVALID_DES");
+                        msgBox.Text = "Ungültiges Zielfeld!";
                         state = BoardState.IDLE;
                         break;
                     case Result.ERROR_NULL_PIECE:
-                        MessageBox.Show("ERROR_NULL_PIECE");
+                        msgBox.Text = "Wähle zuerst eine Figur aus!";
                         state = BoardState.IDLE;
                         break;
                     case Result.ERROR_WRONG_COLOR:
-                        MessageBox.Show("ERROR_WRONG_COLOR");
+                        msgBox.Text = "Diese Figur gehört dem Gegner!";
                         state = BoardState.IDLE;
                         break;
                     default:
-                        MessageBox.Show("UNSPECIFIED ERROR RETURNED");
+                        msgBox.Text = "ARMAGEDDON !!!!!!";
                         state = BoardState.IDLE;
                         break;
                 }
