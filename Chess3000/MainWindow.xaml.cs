@@ -49,8 +49,6 @@ namespace Chess3000
         private void updateView()
         {
             Piece actPiece = null;
-          
-            
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
@@ -91,10 +89,12 @@ namespace Chess3000
                         PieceImg.SetValue(Grid.RowProperty, 7 - j);
                         PieceImg.SetValue(Grid.ColumnProperty, 7 - i);
                         boardCanvas.Children.Add(PieceImg);
+                        Grid.SetZIndex(PieceImg, 98);
                     }
                 }
             }
         }
+
         /*
         private void VisAddedPlay(object sender, TagVisualizerEventArgs e)
         {
@@ -230,6 +230,9 @@ namespace Chess3000
             additionalMove = AdditionalMove.NONE;
         }
         */
+
+        
+
         private void FillBoardWithSquares()
         {
             Rectangle border = new Rectangle();
@@ -252,6 +255,12 @@ namespace Chess3000
                     else rect.Fill = new SolidColorBrush(Colors.White);
                     rect.SetValue(Grid.RowProperty, i);
                     rect.SetValue(Grid.ColumnProperty, j);
+
+                    Rectangle TouchRect = new Rectangle();
+                    TouchRect.Fill = Brushes.Transparent;
+                    TouchRect.SetValue(Grid.RowProperty, i);
+                    TouchRect.SetValue(Grid.ColumnProperty, j);
+
                     /*
                     TagVisualizer tv = CreateVisualizer(i, j, TagDefs);
                     tvcollection.Add(tv);
@@ -267,6 +276,25 @@ namespace Chess3000
             }
             // Make Border of Chessboard
             
+        }
+
+        private void TouchEvent(object sender, TouchEventArgs e)
+        {
+            int xMaster, yMaster, xView, yView;
+            yView = (int)((Control)sender).GetValue(Grid.RowProperty);
+            xView = (int)((Control)sender).GetValue(Grid.ColumnProperty);
+            xMaster = 7 - xView;
+            yMaster = 7 - yView;
+
+            if(state == BoardState.IDLE)
+            {
+                moveFrom = new Pos(yMaster, xMaster);
+            }
+            else if(state == BoardState.MOVE_PENDING)
+            {
+                moveTo = new Pos(yMaster, xMaster);
+                if(master.move(moveFrom, moveTo) == Result.SUCCESS) updateView();
+            }
         }
 
         private void AddNotationLabels()

@@ -41,38 +41,7 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <!--<Image x:Name="p00" Grid.Column="0" Grid.Row="0" Source="images/turmSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p01" Grid.Column="0" Grid.Row="1" Source="images/springerSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p02" Grid.Column="0" Grid.Row="2" Source="images/laeuferSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p03" Grid.Column="0" Grid.Row="3" Source="images/koenigSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p04" Grid.Column="0" Grid.Row="4" Source="images/dameSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p05" Grid.Column="0" Grid.Row="5" Source="images/laeuferSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p06" Grid.Column="0" Grid.Row="6" Source="images/springerSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p07" Grid.Column="0" Grid.Row="7" Source="images/turmSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p10" Grid.Column="1" Grid.Row="0" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p11" Grid.Column="1" Grid.Row="1" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p12" Grid.Column="1" Grid.Row="2" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p13" Grid.Column="1" Grid.Row="3" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p14" Grid.Column="1" Grid.Row="4" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p15" Grid.Column="1" Grid.Row="5" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p16" Grid.Column="1" Grid.Row="6" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p17" Grid.Column="1" Grid.Row="7" Source="images/bauerSchwarz.png" Grid.ZIndex="98"/>
-            <Image x:Name="p70" Grid.Column="7" Grid.Row="0" Source="images/turmWeiss.png" Grid.ZIndex="98"/>
-            <Image x:Name="p71" Grid.Column="7" Grid.Row="1" Source="images/springerWeiss.png" Grid.ZIndex="98"/>
-            <Image x:Name="p72" Grid.Column="7" Grid.Row="2" Source="images/laeuferWeiss.png" Grid.ZIndex="98"/>
-            <Image x:Name="p73" Grid.Column="7" Grid.Row="3" Source="images/koenigWeiss.png" Grid.ZIndex="98"/>
-            <Image x:Name="p74" Grid.Column="7" Grid.Row="4" Source="images/dameWeiss.png" Grid.ZIndex="98"/>
-            <Image x:Name="p75" Grid.Column="7" Grid.Row="5" Source="images/laeuferWeiss.png" Grid.ZIndex="98"/>
-            <Image x:Name="p76" Grid.Column="7" Grid.Row="6" Source="images/springerWeiss.png" Grid.ZIndex="98"/>
-            <Image x:Name="p77" Grid.Column="7" Grid.Row="7" Source="images/turmWeiss.png" Grid.ZIndex="98"/>
-            <Image x:Name="p60" Grid.Column="6" Grid.Row="0" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
-            <Image x:Name="p61" Grid.Column="6" Grid.Row="1" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
-            <Image x:Name="p62" Grid.Column="6" Grid.Row="2" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
-            <Image x:Name="p63" Grid.Column="6" Grid.Row="3" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
-            <Image x:Name="p64" Grid.Column="6" Grid.Row="4" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
-            <Image x:Name="p65" Grid.Column="6" Grid.Row="5" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
-            <Image x:Name="p66" Grid.Column="6" Grid.Row="6" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>
-            <Image x:Name="p67" Grid.Column="6" Grid.Row="7" Source="images/bauerWeiss.png" Grid.ZIndex="98"/>-->
+
            
         </Grid>
         <TextBlock Grid.Column="4" Text="White player" TextWrapping="Wrap" Name="player1" RenderTransformOrigin="0.5,0.5" Margin="0,0,-2,0" Grid.Row="1" TextAlignment="Center" Foreground="Black">
@@ -146,7 +115,6 @@
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
         </Grid>
-        
     </Grid>
 
     
