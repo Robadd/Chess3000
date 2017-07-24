@@ -49,6 +49,8 @@ namespace Chess3000
         public readonly Pos BLACK_ROOK_LONG_CASTLING_POS = new Pos(7, 3);
         Pos lastFrom;
         Pos lastTo;
+        List<Pos> blackPositions = new List<Pos>();
+        List<Pos> whitePositions = new List<Pos>();
 
         public Pos EnPassantPos
         {
@@ -272,6 +274,8 @@ namespace Chess3000
             blackLongRookMoved = false;
             lastFrom = null;
             lastTo = null;
+            blackPositions = new List<Pos>();
+            whitePositions = new List<Pos>();
             chessboard = new Square[8][];
 
             for (int y = 0; y < 8; y++)
@@ -315,6 +319,7 @@ namespace Chess3000
             chessboard[7][4].piece = new King(Chess3000.Color.Black, chessboard[7][4], this);
 
             updatePossibleDestinations();
+            updateColorPositions();
         }
 
         private void updatePossibleDestinations()
@@ -417,6 +422,18 @@ namespace Chess3000
             createInitialBoardState();
         }
 
+        public List<Pos> getPositions(Color color)
+        {
+            if (color == Color.White)
+            {
+                return whitePositions;
+            }
+            else
+            {
+                return blackPositions;
+            }
+        }
+
         public Chess3000.Result move(Pos from, Pos to)
         {
             Piece fromPiece = getPiece(from);
@@ -460,6 +477,8 @@ namespace Chess3000
                 handleCastling(fromPiece, from, to);
 
                 updateEnPassantAvailability(from, to);
+
+                updateColorPositions();
 
                 endTurn(from, to);
 
@@ -742,6 +761,32 @@ namespace Chess3000
             lastFrom = from;
             lastTo = to;
             drawing = (drawing == Color.White ? Color.Black : Color.White);
+        }
+
+        private void updateColorPositions()
+        {
+            whitePositions = new List<Pos>();
+            blackPositions = new List<Pos>();
+            for (int y = 0; y <= 7; y++)
+            {
+                for (int x = 0; x <= 7; x++)
+                {
+                    Pos currentPos = new Pos(y, x);
+                    Piece piece = getPiece(currentPos);
+
+                    if (piece != null)
+                    {
+                        if (piece.Color == Color.White)
+                        {
+                            whitePositions.Add(currentPos);
+                        }
+                        else
+                        {
+                            blackPositions.Add(currentPos);
+                        }
+                    }
+                }
+            }
         }
     }
 }
