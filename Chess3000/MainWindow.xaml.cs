@@ -34,7 +34,6 @@ namespace Chess3000
         };
         private BoardState state;
         private Pos moveFrom, moveTo;
-        private Piece movingPiece;
 
         public MainWindow()
         {
@@ -374,6 +373,32 @@ namespace Chess3000
                     tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.White;
                 }
             }
+        }
+
+        private void Reset(object sender, TouchEventArgs e)
+        {
+            master.reset();
+            resetSquares();
+            updateView();
+            state = BoardState.IDLE;
+            AufgabeBlack.IsEnabled = true;
+            AufgabeWhite.IsEnabled = true;
+        }
+
+        private void GiveUpWhite(object sender, TouchEventArgs e)
+        {
+            state = BoardState.CHECKMATE;
+            AufgabeBlack.IsEnabled = false;
+            AufgabeWhite.IsEnabled = false;
+            player2.Text = "Glückwunsch! Sie haben gewonnen.";
+        }
+
+        private void GiveUpBlack(object sender, TouchEventArgs e)
+        {
+            state = BoardState.CHECKMATE;
+            AufgabeBlack.IsEnabled = false;
+            AufgabeWhite.IsEnabled = false;
+            player1.Text = "Glückwunsch! Sie haben gewonnen.";
         }
 
         private void AddNotationLabels()
