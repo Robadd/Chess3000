@@ -64,6 +64,7 @@ namespace Chess3000
                 }
             }
             state = BoardState.SETUP;
+            deactivateVisualizer(Color.Black);
         }
 
         private int AddedPiecesCount()
@@ -90,7 +91,11 @@ namespace Chess3000
             AddedPieces[xView, yView] = true;
             var PieceImg = (Image)this.FindName("p"+ xView+yView);
             if(PieceImg != null) PieceImg.Visibility = Visibility.Hidden;
-            if (AddedPiecesCount() == 5)
+            if(AddedPiecesCount() == 16)
+            {
+                deactivateVisualizer(Color.White);
+            }
+            if (AddedPiecesCount() == 32)
             {
                 StartBtn.Visibility = Visibility.Visible;
                 StartBtn.IsEnabled = true;
@@ -218,9 +223,13 @@ namespace Chess3000
             foreach(TagVisualizer tagvis in tvcollection)
             {
                 Pos tagvispos = new Pos(7 - (int)tagvis.GetValue(Grid.ColumnProperty), 7 - (int)tagvis.GetValue(Grid.RowProperty));
-                if (master.getPositions(player).contains(tagvispos))
+                if (master.getPositions(player).Contains(tagvispos))
                 {
                     tagvis.IsEnabled = false;
+                }
+                else
+                {
+                    tagvis.IsEnabled = true;
                 }
                 
             }
