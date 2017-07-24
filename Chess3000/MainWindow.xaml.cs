@@ -302,7 +302,7 @@ namespace Chess3000
             {
                 moveFrom = new Pos(yMaster, xMaster);
                 state = BoardState.MOVE_PENDING;
-                resetSquares();
+                //resetSquares();
                 tiles[yView, xView].Fill = Brushes.Orange;
             }
             else if(state == BoardState.MOVE_PENDING)
@@ -314,7 +314,9 @@ namespace Chess3000
                 if(moveFrom.Equals(moveTo))
                 {
                     state = BoardState.IDLE;
-                    resetSquares();
+                    //resetSquares();
+                    if ((moveFrom.x + moveFrom.y) % 2 == 0) tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.Black;
+                    else tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.White;
                     return;
                 }
                 Result res = master.move(moveFrom, moveTo);
