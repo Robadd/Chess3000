@@ -26,7 +26,9 @@ namespace Chess3000
         private ChessMaster master;
         private bool[,] AddedPieces = new bool[8,8];
         private Rectangle[,] tiles = new Rectangle[8, 8];
-        private Collection<TagVisualizationDefinition> TagDefs
+
+        private Collection<TagVisualizationDefinition> TagDefs = new Collection<TagVisualizationDefinition>();
+
 
         public enum BoardState {
             SETUP,
@@ -339,7 +341,7 @@ namespace Chess3000
                     rect.SetValue(Grid.RowProperty, i);
                     rect.SetValue(Grid.ColumnProperty, j);
 
-                    TagVisualizer tv = CreateVisualizer(i, j, dc);
+                    TagVisualizer tv = CreateVisualizer(i, j, TagDefs);
                     tvcollection.Add(tv);
                     tiles[i, j] = rect;
                     // Add to view
@@ -411,7 +413,6 @@ namespace Chess3000
 
         private void CreateVisualizerDefinitions()
         {
-            
             for (int i = 0; i < 16; i++)
             {
                 TagVisualizationDefinition td = new TagVisualizationDefinition();
