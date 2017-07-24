@@ -91,6 +91,7 @@ namespace Chess3000
                         boardCanvas.Children.Add(PieceImg);
                         Grid.SetZIndex(PieceImg, 98);
                     }
+                   
                 }
             }
         }
@@ -260,6 +261,8 @@ namespace Chess3000
                     TouchRect.Fill = Brushes.Transparent;
                     TouchRect.SetValue(Grid.RowProperty, i);
                     TouchRect.SetValue(Grid.ColumnProperty, j);
+                    Grid.SetZIndex(TouchRect, 99);
+                    TouchRect.TouchDown += TouchEvent;
 
                     /*
                     TagVisualizer tv = CreateVisualizer(i, j, TagDefs);
