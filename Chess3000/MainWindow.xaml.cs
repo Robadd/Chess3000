@@ -303,7 +303,7 @@ namespace Chess3000
                 moveFrom = new Pos(yMaster, xMaster);
                 state = BoardState.MOVE_PENDING;
                 resetSquares();
-                tiles[xView, yView].Fill = Brushes.Orange;
+                tiles[yView, xView].Fill = Brushes.Orange;
             }
             else if(state == BoardState.MOVE_PENDING)
             {
