@@ -375,32 +375,49 @@ namespace Chess3000
             }
         }
 
+        private bool Sure()
+        {
+            return MessageBox.Show("Sind Sie sicher?", "Sicher?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
+        }
+
         private void Reset(object sender, TouchEventArgs e)
         {
-            master.reset();
-            resetSquares();
-            updateView();
-            state = BoardState.IDLE;
-            AufgabeBlack.IsEnabled = true;
-            AufgabeWhite.IsEnabled = true;
-            player1.Text = "";
-            player2.Text = "";
+            if (Sure())
+            {
+                master.reset();
+                resetSquares();
+                updateView();
+                state = BoardState.IDLE;
+                AufgabeBlack.IsEnabled = true;
+                AufgabeWhite.IsEnabled = true;
+                player1.Text = "";
+                player2.Text = "";
+            }
+            else return;
         }
 
         private void GiveUpWhite(object sender, TouchEventArgs e)
         {
-            state = BoardState.CHECKMATE;
-            AufgabeBlack.IsEnabled = false;
-            AufgabeWhite.IsEnabled = false;
-            player2.Text = "Glückwunsch! Sie haben gewonnen.";
+            if (Sure())
+            {
+                state = BoardState.CHECKMATE;
+                AufgabeBlack.IsEnabled = false;
+                AufgabeWhite.IsEnabled = false;
+                player2.Text = "Glückwunsch! Sie haben gewonnen.";
+            }
+            else return;
         }
 
         private void GiveUpBlack(object sender, TouchEventArgs e)
         {
-            state = BoardState.CHECKMATE;
-            AufgabeBlack.IsEnabled = false;
-            AufgabeWhite.IsEnabled = false;
-            player1.Text = "Glückwunsch! Sie haben gewonnen.";
+            if (Sure())
+            {
+                state = BoardState.CHECKMATE;
+                AufgabeBlack.IsEnabled = false;
+                AufgabeWhite.IsEnabled = false;
+                player1.Text = "Glückwunsch! Sie haben gewonnen.";
+            }
+            else return;
         }
 
         private void AddNotationLabels()
