@@ -33,20 +33,20 @@ namespace Chess3000
         bool blackShortRookMoved = false;
         bool whiteLongRookMoved = false;
         bool blackLongRookMoved = false;
-        readonly Pos White_KING_START_POS = new Pos(0, 4);
-        readonly Pos Black_KING_START_POS = new Pos(7, 4);
-        readonly Pos WHITE_ROOK_SHORT_START_POS = new Pos(0, 7);
-        readonly Pos BLACK_ROOK_SHORT_START_POS = new Pos(7, 7);
-        readonly Pos WHITE_ROOK_LONG_START_POS = new Pos(0, 0);
-        readonly Pos BLACK_ROOK_LONG_START_POS = new Pos(7, 0);
-        readonly Pos WHITE_KING_SHORT_CASTLING_POS = new Pos(0, 6);
-        readonly Pos BLACK_KING_SHORT_CASTLING_POS = new Pos(7, 6);
-        readonly Pos WHITE_KING_LONG_CASTLING_POS = new Pos(0, 2);
-        readonly Pos BLACK_KING_LONG_CASTLING_POS = new Pos(7, 2);
-        readonly Pos WHITE_ROOK_SHORT_CASTLING_POS = new Pos(0, 5);
-        readonly Pos BLACK_ROOK_SHORT_CASTLING_POS = new Pos(7, 5);
-        readonly Pos WHITE_ROOK_LONG_CASTLING_POS = new Pos(0, 3);
-        readonly Pos BLACK_ROOK_LONG_CASTLING_POS = new Pos(7, 3);
+        public readonly Pos WHITE_KING_START_POS = new Pos(0, 4);
+        public readonly Pos BLACK_KING_START_POS = new Pos(7, 4);
+        public readonly Pos WHITE_ROOK_SHORT_START_POS = new Pos(0, 7);
+        public readonly Pos BLACK_ROOK_SHORT_START_POS = new Pos(7, 7);
+        public readonly Pos WHITE_ROOK_LONG_START_POS = new Pos(0, 0);
+        public readonly Pos BLACK_ROOK_LONG_START_POS = new Pos(7, 0);
+        public readonly Pos WHITE_KING_SHORT_CASTLING_POS = new Pos(0, 6);
+        public readonly Pos BLACK_KING_SHORT_CASTLING_POS = new Pos(7, 6);
+        public readonly Pos WHITE_KING_LONG_CASTLING_POS = new Pos(0, 2);
+        public readonly Pos BLACK_KING_LONG_CASTLING_POS = new Pos(7, 2);
+        public readonly Pos WHITE_ROOK_SHORT_CASTLING_POS = new Pos(0, 5);
+        public readonly Pos BLACK_ROOK_SHORT_CASTLING_POS = new Pos(7, 5);
+        public readonly Pos WHITE_ROOK_LONG_CASTLING_POS = new Pos(0, 3);
+        public readonly Pos BLACK_ROOK_LONG_CASTLING_POS = new Pos(7, 3);
         Pos lastFrom;
         Pos lastTo;
 
@@ -495,13 +495,13 @@ namespace Chess3000
             bool toWhiteCastlingPos = to.Equals(WHITE_KING_SHORT_CASTLING_POS) ||
                                       to.Equals(WHITE_KING_LONG_CASTLING_POS);
             bool whiteCastling = fromPiece.PieceType == PieceType.King &&
-                                 from.Equals(White_KING_START_POS) &&
+                                 from.Equals(WHITE_KING_START_POS) &&
                                  toWhiteCastlingPos;
 
             bool toBlackCastlingPos = to.Equals(BLACK_KING_SHORT_CASTLING_POS) ||
                                       to.Equals(BLACK_KING_LONG_CASTLING_POS);
             bool blackCastling = fromPiece.PieceType == PieceType.King &&
-                                 from.Equals(Black_KING_START_POS) &&
+                                 from.Equals(BLACK_KING_START_POS) &&
                                  toBlackCastlingPos;
 
             if (whiteCastling || blackCastling)
@@ -542,7 +542,7 @@ namespace Chess3000
             if (drawing == Color.White)
             {
                 if (fromPiece.PieceType == PieceType.King &&
-                    from.Equals(White_KING_START_POS))
+                    from.Equals(WHITE_KING_START_POS))
                 {
                     whiteKingMoved = true;
                     situationChanged = true;
@@ -565,7 +565,7 @@ namespace Chess3000
             else
             {
                 if (fromPiece.PieceType == PieceType.King &&
-                    from.Equals(Black_KING_START_POS))
+                    from.Equals(BLACK_KING_START_POS))
                 {
                     blackKingMoved = true;
                     situationChanged = true;

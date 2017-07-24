@@ -25,6 +25,25 @@ namespace Chess3000
         public Collection<TagVisualizer> tvcollection = new Collection<TagVisualizer>();
         private ChessMaster master;
         private bool[,] AddedPieces = new bool[8,8];
+        private Rectangle[,] tiles = new Rectangle[8, 8];
+        public enum BoardState {
+            FINE,
+            WRONG_MOVE,
+            ADDITIONAL_MOVE,
+            CHECK,
+            CHECKMATE
+        };
+        private BoardState state;
+        private Image rookImg;
+
+        public enum AdditionalMove{
+            NONE,
+            CASTLING_WHITE_LONG,
+            CASTLING_WHITE_SHORT,
+            CASTLING_BLACK_LONG,
+            CASTLING_BLACK_SHORT
+        }
+        private AdditionalMove additionalMove;
 
         public MainWindow()
         {
@@ -109,6 +128,88 @@ namespace Chess3000
             xView = (int)((Control)sender).GetValue(Grid.ColumnProperty);
             xMaster = 7 - xView;
             yMaster = 7 - yView;
+            Piece movingPiece = master.getPiece(new Pos(yMaster, xMaster));
+            if (state == BoardState.FINE)
+            {
+                if(movingPiece.Color == master.Drawing)
+                {
+
+                }
+                else
+                {
+                    state = BoardState.WRONG_MOVE;
+                    if( master.Drawing == Color.Black)
+                    {
+
+                    }
+                    else if(master.Drawing == Color.White)
+                    {
+
+                    }
+                }
+            }
+            else if(state == BoardState.ADDITIONAL_MOVE)
+            {
+
+            }
+            else if(state == BoardState.WRONG_MOVE)
+            {
+
+            }
+        }
+
+        private void updateView()
+        {
+            switch (state)
+            {
+                case BoardState.FINE:
+                    if(master.Drawing == Color.Black) player2.Text = player1.Text = "Schwarz ist am Zug";
+                    else player2.Text = player1.Text = "Weiß ist am Zug";
+                    break;
+                
+                case BoardState.WRONG_MOVE:
+
+                    break;
+                case BoardState.ADDITIONAL_MOVE:
+                    Pos rookPos = null;
+                    rookImg = null;
+                    if(additionalMove == AdditionalMove.CASTLING_WHITE_LONG)
+                    {
+                        rookPos = master.WHITE_ROOK_LONG_CASTLING_POS;
+                        rookImg = p70;
+                    }
+                    else if(additionalMove == AdditionalMove.CASTLING_WHITE_SHORT)
+                    {
+                        rookPos = master.WHITE_ROOK_SHORT_CASTLING_POS;
+                        rookImg = p70;
+                    }
+                    else if (additionalMove == AdditionalMove.CASTLING_BLACK_LONG)
+                    {
+                        rookPos = master.BLACK_ROOK_LONG_CASTLING_POS;
+                        rookImg = p00;
+                    }
+                    else if(additionalMove == AdditionalMove.CASTLING_BLACK_SHORT)
+                    {
+                        rookPos = master.BLACK_ROOK_SHORT_CASTLING_POS;
+                        rookImg = p00;
+                    }
+                    if(rookImg != null && rookPos != null)
+                    {
+                        rookImg.SetValue(Grid.RowProperty, 7 - rookPos.x);
+                        rookImg.SetValue(Grid.ColumnProperty, 7 - rookPos.y);
+                        rookImg.Visibility = Visibility.Visible;
+                    }
+                    
+                    break;
+                
+                case BoardState.CHECK:
+
+                    break;
+                
+                case BoardState.CHECKMATE:
+
+                    break;
+            }
         }
 
         private void StartGame(object sender, RoutedEventArgs e)
@@ -121,6 +222,8 @@ namespace Chess3000
                 tv.VisualizationAdded += VisAddedPlay;
                 tv.VisualizationRemoved += VisRemovedPlay;
             }
+            state = BoardState.FINE;
+            additionalMove = AdditionalMove.NONE;
         }
 
         private void FillBoardWithSquares()
@@ -148,6 +251,7 @@ namespace Chess3000
 
                     TagVisualizer tv = CreateVisualizer(i, j, dc);
                     tvcollection.Add(tv);
+                    tiles[i, j] = rect;
                     // Add to view
                     boardCanvas.Children.Add(rect);
                     Grid.SetZIndex(rect, 0);
@@ -222,8 +326,8 @@ namespace Chess3000
             {
                 TagVisualizationDefinition td = new TagVisualizationDefinition();
                 td.Source = null;
-                td.Value = i;
-                td.LostTagTimeout = 200;
+                td.Value = 64 + i;
+                td.LostTagTimeout = 500;
                 dc.Add(td);
             }
             return dc;
