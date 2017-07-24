@@ -323,8 +323,8 @@ namespace Chess3000
                     case Result.SUCCESS:
                         updateView();
                         resetSquares();
-                        tiles[7 - moveFrom.y, 7 - moveFrom.x].Fill = Brushes.Green;
-                        tiles[7 - moveTo.y, 7 - moveTo.x].Fill = Brushes.Green;
+                        tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.Green;
+                        tiles[7 - moveTo.x, 7 - moveTo.y].Fill = Brushes.Green;
                         state = BoardState.IDLE;
                         break;
                     case Result.ERROR_CHECK:
