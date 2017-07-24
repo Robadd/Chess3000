@@ -48,6 +48,15 @@ namespace Chess3000
 
         private void updateView()
         {
+            for (int i = boardCanvas.Children.Count - 1; i >= 0; i--)
+            {
+                var el = boardCanvas.Children[i];
+                if (Grid.GetZIndex(el) == 98)
+                {
+                    boardCanvas.Children.RemoveAt(i);
+                }
+            } 
+
             Piece actPiece = null;
             for (int i = 0; i < 8; i++)
             {
@@ -91,7 +100,6 @@ namespace Chess3000
                         boardCanvas.Children.Add(PieceImg);
                         Grid.SetZIndex(PieceImg, 98);
                     }
-                   
                 }
             }
         }
