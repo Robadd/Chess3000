@@ -110,20 +110,20 @@
                     </TransformGroup>
                 </TextBlock.LayoutTransform>
             </TextBlock>
-            <Custom:SurfaceButton x:Name="AufgabeBlack" Content="Aufgeben" RenderTransformOrigin="0.5,0.5" FontSize="16" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="1" Margin="50,30,50,30" TouchDown="GiveUpBlack">
-                <Custom:SurfaceButton.LayoutTransform>
+            <Button x:Name="AufgabeBlack" Content="Aufgeben" RenderTransformOrigin="0.5,0.5" FontSize="16" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="1" Margin="50,30,50,30" TouchDown="GiveUpBlack">
+                <Button.LayoutTransform>
                     <TransformGroup>
                         <RotateTransform Angle="90"/>
                     </TransformGroup>
-                </Custom:SurfaceButton.LayoutTransform>
-            </Custom:SurfaceButton>
-            <Custom:SurfaceButton x:Name="ResetBlack" Content="Zurücksetzen" RenderTransformOrigin="0.5,0.5" FontSize="16" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="1" Margin="50,30,50,30" TouchDown="Reset">
-                <Custom:SurfaceButton.LayoutTransform>
+                </Button.LayoutTransform>
+            </Button>
+            <Button x:Name="ResetBlack" Content="Zurücksetzen" RenderTransformOrigin="0.5,0.5" FontSize="16" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="1" Margin="50,30,50,30" TouchDown="Reset">
+                <Button.LayoutTransform>
                     <TransformGroup>
                         <RotateTransform Angle="90"/>
                     </TransformGroup>
-                </Custom:SurfaceButton.LayoutTransform>
-            </Custom:SurfaceButton>
+                </Button.LayoutTransform>
+            </Button>
         </Grid>
         <Grid Grid.Column="4" Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -141,20 +141,20 @@
                     </TransformGroup>
                 </TextBlock.LayoutTransform>
             </TextBlock>
-            <Custom:SurfaceButton x:Name="AufgabeWhite" Content="Aufgeben" RenderTransformOrigin="0.5,0.5" FontSize="16" Grid.ColumnSpan="1" Margin="50,30,50,30" Grid.Column="0" TouchDown="GiveUpWhite">
-                <Custom:SurfaceButton.LayoutTransform>
+            <Button x:Name="AufgabeWhite" Content="Aufgeben" RenderTransformOrigin="0.5,0.5" FontSize="16" Grid.ColumnSpan="1" Margin="50,30,50,30" Grid.Column="0" TouchDown="GiveUpWhite">
+                <Button.LayoutTransform>
                     <TransformGroup>
                         <RotateTransform Angle="-90"/>
                     </TransformGroup>
-                </Custom:SurfaceButton.LayoutTransform>
-            </Custom:SurfaceButton>
-            <Custom:SurfaceButton x:Name="ResetWhite" TouchDown="Reset" Content="Zurücksetzen" RenderTransformOrigin="0.5,0.5" FontSize="16" Grid.ColumnSpan="1" Margin="50,30,50,30" Grid.Column="1">
-                <Custom:SurfaceButton.LayoutTransform>
+                </Button.LayoutTransform>
+            </Button>
+            <Button x:Name="ResetWhite" TouchDown="Reset" Content="Zurücksetzen" RenderTransformOrigin="0.5,0.5" FontSize="16" Grid.ColumnSpan="1" Margin="50,30,50,30" Grid.Column="1">
+                <Button.LayoutTransform>
                     <TransformGroup>
                         <RotateTransform Angle="-90"/>
                     </TransformGroup>
-                </Custom:SurfaceButton.LayoutTransform>
-            </Custom:SurfaceButton>
+                </Button.LayoutTransform>
+            </Button>
         </Grid>
     </Grid>
 
