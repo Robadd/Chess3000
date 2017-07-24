@@ -325,38 +325,38 @@ namespace Chess3000
                     case Result.SUCCESS:
                         updateView();
                         resetSquares();
-                        tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.Green;
+                        tiles[7 - master.LastFrom.x, 7 - master.LastFrom.y].Fill = Brushes.Green;
                         tiles[7 - moveTo.x, 7 - moveTo.y].Fill = Brushes.Green;
                         state = BoardState.IDLE;
-                        break;
+                        break; 
                     case Result.ERROR_CHECK:
                         msgBox.Text = "Du stehst im Schach!";
-                        if ((moveFrom.x + moveFrom.y) % 2 == 0) tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.Black;
-                        else tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.White;
+                        if ((master.LastFrom.x + master.LastFrom.y) % 2 == 0) tiles[7 - master.LastFrom.x, 7 - master.LastFrom.y].Fill = Brushes.Black;
+                        else tiles[7 - master.LastFrom.x, 7 - master.LastFrom.y].Fill = Brushes.White;
                         state = BoardState.IDLE;
                         break;
                     case Result.ERROR_INVALID_DES:
                         msgBox.Text = "Ungültiges Zielfeld!";
-                        if ((moveFrom.x + moveFrom.y) % 2 == 0) tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.Black;
-                        else tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.White;
+                        if ((master.LastFrom.x + master.LastFrom.y) % 2 == 0) tiles[7 - master.LastFrom.x, 7 - master.LastFrom.y].Fill = Brushes.Black;
+                        else tiles[7 - master.LastFrom.x, 7 - master.LastFrom.y].Fill = Brushes.White;
                         state = BoardState.IDLE;
                         break;
                     case Result.ERROR_NULL_PIECE:
                         msgBox.Text = "Wähle zuerst eine Figur aus!";
-                        if ((moveFrom.x + moveFrom.y) % 2 == 0) tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.Black;
-                        else tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.White;
+                        if ((master.LastFrom.x + master.LastFrom.y) % 2 == 0) tiles[7 - master.LastFrom.x, 7 - master.LastFrom.y].Fill = Brushes.Black;
+                        else tiles[7 - master.LastFrom.x, 7 - master.LastFrom.y].Fill = Brushes.White;
                         state = BoardState.IDLE;
                         break;
                     case Result.ERROR_WRONG_COLOR:
                         msgBox.Text = "Diese Figur gehört dem Gegner!";
-                        if ((moveFrom.x + moveFrom.y) % 2 == 0) tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.Black;
-                        else tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.White;
+                        if ((master.LastFrom.x + master.LastFrom.y) % 2 == 0) tiles[7 - master.LastFrom.x, 7 - master.LastFrom.y].Fill = Brushes.Black;
+                        else tiles[7 - master.LastFrom.x, 7 - master.LastFrom.y].Fill = Brushes.White;
                         state = BoardState.IDLE;
                         break;
                     default:
                         msgBox.Text = "ARMAGEDDON !!!!!!";
-                        if ((moveFrom.x + moveFrom.y) % 2 == 0) tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.Black;
-                        else tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.White;
+                        if ((master.LastFrom.x + master.LastFrom.y) % 2 == 0) tiles[7 - master.LastFrom.x, 7 - master.LastFrom.y].Fill = Brushes.Black;
+                        else tiles[7 - master.LastFrom.x, 7 - master.LastFrom.y].Fill = Brushes.White;
                         state = BoardState.IDLE;
                         break;
                 }
