@@ -297,10 +297,33 @@ namespace Chess3000
             else if(state == BoardState.MOVE_PENDING)
             {
                 moveTo = new Pos(yMaster, xMaster);
-                if (master.move(moveFrom, moveTo) == Result.SUCCESS)
+                Result res = master.move(moveFrom, moveTo);
+                switch (res)
                 {
-                    updateView();
-                    state = BoardState.IDLE;
+                    case Result.SUCCESS:
+                        updateView();
+                        state = BoardState.IDLE;
+                        break;
+                    case Result.ERROR_CHECK:
+                        MessageBox.Show("ERROR_CHECK");
+                        state = BoardState.IDLE;
+                        break;
+                    case Result.ERROR_INVALID_DES:
+                        MessageBox.Show("ERROR_INVALID_DES");
+                        state = BoardState.IDLE;
+                        break;
+                    case Result.ERROR_NULL_PIECE:
+                        MessageBox.Show("ERROR_NULL_PIECE");
+                        state = BoardState.IDLE;
+                        break;
+                    case Result.ERROR_WRONG_COLOR:
+                        MessageBox.Show("ERROR_WRONG_COLOR");
+                        state = BoardState.IDLE;
+                        break;
+                    default:
+                        MessageBox.Show("UNSPECIFIED ERROR RETURNED");
+                        state = BoardState.IDLE;
+                        break;
                 }
             }
         }
