@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Surface.Presentation.Controls;
+using System.IO;
 
 namespace Chess3000
 {
@@ -22,35 +23,18 @@ namespace Chess3000
     /// </summary>
     public partial class MainWindow : SurfaceWindow
     {
-        public Collection<TagVisualizer> tvcollection = new Collection<TagVisualizer>();
         private ChessMaster master;
-        private bool[,] AddedPieces = new bool[8,8];
         private Rectangle[,] tiles = new Rectangle[8, 8];
 
-        private Collection<TagVisualizationDefinition> TagDefs = new Collection<TagVisualizationDefinition>();
-
-
         public enum BoardState {
-            SETUP,
-            FINE,
-            WRONG_MOVE,
-            ADDITIONAL_MOVE,
+            IDLE,
+            MOVE_PENDING,
             CHECK,
             CHECKMATE
         };
         private BoardState state;
-        private Image rookImg;
         private Pos moveFrom, moveTo;
         private Piece movingPiece;
-
-        public enum AdditionalMove{
-            NONE,
-            CASTLING_WHITE_LONG,
-            CASTLING_WHITE_SHORT,
-            CASTLING_BLACK_LONG,
-            CASTLING_BLACK_SHORT
-        }
-        private AdditionalMove additionalMove;
 
         public MainWindow()
         {
@@ -58,73 +42,60 @@ namespace Chess3000
             InitializeComponent();
             FillBoardWithSquares();
             AddNotationLabels();
-            for (int x = 0; x < 8; x++)
+            state = BoardState.IDLE;
+            updateView();
+        }
+
+        private void updateView()
+        {
+            Piece actPiece = null;
+          
+            
+            for (int i = 0; i < 8; i++)
             {
-                for (int y = 0; y < 8; y++)
+                for (int j = 0; j < 8; j++)
                 {
-                    AddedPieces[x, y] = false;
+                    actPiece = master.getPiece(new Pos(i, j));
+                    if (actPiece != null) {
+                        Image PieceImg = new Image();
+                        BitmapImage bmpimg = new BitmapImage();
+                        switch (actPiece.PieceType)
+                        {
+                            case PieceType.Bishop:
+                                if(actPiece.Color == Color.Black) bmpimg = new BitmapImage(new Uri("/images/laeuferSchwarz.png", UriKind.Relative));
+                                else bmpimg = new BitmapImage(new Uri("/images/laeuferWeiss.png", UriKind.Relative));
+                                break;
+                            case PieceType.King:
+                                if (actPiece.Color == Color.Black) bmpimg = new BitmapImage(new Uri("/images/koenigSchwarz.png", UriKind.Relative));
+                                else bmpimg = new BitmapImage(new Uri("/images/koenigWeiss.png", UriKind.Relative));
+                                break;
+                            case PieceType.Knight:
+                                if (actPiece.Color == Color.Black) bmpimg = new BitmapImage(new Uri("/images/springerSchwarz.png", UriKind.Relative));
+                                else bmpimg = new BitmapImage(new Uri("/images/springerWeiss.png", UriKind.Relative));
+                                break;
+                            case PieceType.Pawn:
+                                if (actPiece.Color == Color.Black) bmpimg = new BitmapImage(new Uri("/images/bauerSchwarz.png", UriKind.Relative));
+                                else bmpimg = new BitmapImage(new Uri("/images/bauerWeiss.png", UriKind.Relative));
+                                break;
+                            case PieceType.Queen:
+                                if (actPiece.Color == Color.Black) bmpimg = new BitmapImage(new Uri("/images/dameSchwarz.png", UriKind.Relative));
+                                else bmpimg = new BitmapImage(new Uri("/images/dameWeiss.png", UriKind.Relative));
+                                break;
+                            case PieceType.Rook:
+                                if (actPiece.Color == Color.Black) bmpimg = new BitmapImage(new Uri(@"/images/turmSchwarz.png", UriKind.Relative));
+                                else bmpimg = new BitmapImage(new Uri(@"images\turmWeiss.png", UriKind.Relative));
+                                break;
+                        }
+                        PieceImg.Source = bmpimg;
+                        PieceImg.Stretch = Stretch.Fill;
+                        PieceImg.SetValue(Grid.RowProperty, 7 - j);
+                        PieceImg.SetValue(Grid.ColumnProperty, 7 - i);
+                        boardCanvas.Children.Add(PieceImg);
+                    }
                 }
             }
-            state = BoardState.SETUP;
-            deactivateVisualizer(Color.Black);
         }
-
-        private int AddedPiecesCount()
-        {
-            int count = 0;
-            for (int y = 0; y < 8; y++)
-            {
-                if (AddedPieces[0, y]) count++;
-                if (AddedPieces[1, y]) count++;
-                if (AddedPieces[6, y]) count++;
-                if (AddedPieces[7, y]) count++;
-
-            }
-            return count;
-        }
-
-        private void VisAddedSetup(object sender, TagVisualizerEventArgs e)
-        {
-            int xMaster, yMaster, xView, yView;
-            yView = (int)((Control)sender).GetValue(Grid.RowProperty);
-            xView = (int)((Control)sender).GetValue(Grid.ColumnProperty);
-            xMaster = 7 - xView;
-            yMaster = 7 - yView;
-            AddedPieces[xView, yView] = true;
-            var PieceImg = (Image)this.FindName("p"+ xView+yView);
-            if(PieceImg != null) PieceImg.Visibility = Visibility.Hidden;
-            if(AddedPiecesCount() == 16)
-            {
-                deactivateVisualizer(Color.White);
-            }
-            if (AddedPiecesCount() == 32)
-            {
-                StartBtn.Visibility = Visibility.Visible;
-                StartBtn.IsEnabled = true;
-            }
-            player1.Text = "Tag:" + "x:" + xMaster + " y:" + yMaster;
-            player2.Text = "Added Pieces: " + AddedPiecesCount();
-        }
-
-        private void VisRemovedSetup(object sender, TagVisualizerEventArgs e)
-        {
-            int xMaster, yMaster, xView, yView;
-            yView = (int)((Control)sender).GetValue(Grid.RowProperty);
-            xView = (int)((Control)sender).GetValue(Grid.ColumnProperty);
-            xMaster = 7 - xView;
-            yMaster = 7 - yView;
-            AddedPieces[xView, yView] = false;
-            var PieceImg = (Image)this.FindName("p" + xView + yView);
-            if (PieceImg != null) PieceImg.Visibility = Visibility.Visible;
-            if (AddedPiecesCount() != 5)
-            {
-                StartBtn.Visibility = Visibility.Hidden;
-                StartBtn.IsEnabled = true;
-            }
-            player1.Text = "";
-            player2.Text = "Added Pieces: " + AddedPiecesCount();
-        }
-
+        /*
         private void VisAddedPlay(object sender, TagVisualizerEventArgs e)
         {
             int xMaster, yMaster, xView, yView;
@@ -176,68 +147,8 @@ namespace Chess3000
 
             }
         }
-
-        private void switchTagEvents(bool on)
-        {
-            if(state == BoardState.SETUP)
-            {
-                if(on)
-                {
-                    foreach (TagVisualizer tagvis in tvcollection)
-                    {
-                        tagvis.VisualizationAdded += VisAddedSetup;
-                        tagvis.VisualizationRemoved += VisRemovedSetup;
-                    }
-                }
-                else
-                {
-                    foreach (TagVisualizer tagvis in tvcollection)
-                    {
-                        tagvis.VisualizationAdded -= VisAddedSetup;
-                        tagvis.VisualizationRemoved -= VisRemovedSetup;
-                    }
-                }
-            }
-            else
-            {
-                if (on)
-                {
-                    foreach (TagVisualizer tagvis in tvcollection)
-                    {
-                        tagvis.VisualizationAdded += VisAddedPlay;
-                        tagvis.VisualizationRemoved += VisRemovedPlay;
-                    }
-                }
-                else
-                {
-                    foreach (TagVisualizer tagvis in tvcollection)
-                    {
-                        tagvis.VisualizationAdded -= VisAddedPlay;
-                        tagvis.VisualizationRemoved -= VisRemovedPlay;
-                    }
-                }
-            }
-        }
-
-        private void deactivateVisualizer(Color player)
-        {
-            switchTagEvents(false);
-            foreach(TagVisualizer tagvis in tvcollection)
-            {
-                Pos tagvispos = new Pos(7 - (int)tagvis.GetValue(Grid.ColumnProperty), 7 - (int)tagvis.GetValue(Grid.RowProperty));
-                if (master.getPositions(player).Contains(tagvispos))
-                {
-                    tagvis.IsEnabled = false;
-                }
-                else
-                {
-                    tagvis.IsEnabled = true;
-                }
-                
-            }
-            switchTagEvents(true);
-        }
-
+        */
+      
         private void resetSquares()
         {
             for (int i = 0; i < 8; i++)
@@ -249,8 +160,8 @@ namespace Chess3000
                 }
             }
         }
-
-        private void updateView()
+        /*
+        private void updateViewOld()
         {
             switch (state)
             {
@@ -303,6 +214,7 @@ namespace Chess3000
                     break;
             }
         }
+        
 
         private void StartGame(object sender, RoutedEventArgs e)
         {
@@ -317,7 +229,7 @@ namespace Chess3000
             state = BoardState.FINE;
             additionalMove = AdditionalMove.NONE;
         }
-
+        */
         private void FillBoardWithSquares()
         {
             Rectangle border = new Rectangle();
@@ -328,7 +240,7 @@ namespace Chess3000
             border.Stroke = Brushes.Black;
             border.StrokeThickness = 2;
             boardCanvas.Children.Add(border);
-            CreateVisualizerDefinitions();
+           // CreateVisualizerDefinitions();
             
             for (int i = 0; i < 8; i++)
             {
@@ -340,15 +252,17 @@ namespace Chess3000
                     else rect.Fill = new SolidColorBrush(Colors.White);
                     rect.SetValue(Grid.RowProperty, i);
                     rect.SetValue(Grid.ColumnProperty, j);
-
+                    /*
                     TagVisualizer tv = CreateVisualizer(i, j, TagDefs);
                     tvcollection.Add(tv);
+                    boardCanvas.Children.Add(tv);
+                    Grid.SetZIndex(tv, 99);
+                    */
                     tiles[i, j] = rect;
                     // Add to view
                     boardCanvas.Children.Add(rect);
                     Grid.SetZIndex(rect, 0);
-                    boardCanvas.Children.Add(tv);
-                    Grid.SetZIndex(tv, 99);
+                    
                 }
             }
             // Make Border of Chessboard
@@ -411,6 +325,8 @@ namespace Chess3000
             }
         }
 
+
+/*
         private void CreateVisualizerDefinitions()
         {
             for (int i = 0; i < 16; i++)
@@ -447,5 +363,6 @@ namespace Chess3000
             }
             return tv;
         }
-    }
+        */
+    }  
 }
