@@ -314,6 +314,7 @@ namespace Chess3000
                 if(moveFrom.Equals(moveTo))
                 {
                     state = BoardState.IDLE;
+                    resetSquares();
                     return;
                 }
                 Result res = master.move(moveFrom, moveTo);
@@ -321,6 +322,9 @@ namespace Chess3000
                 {
                     case Result.SUCCESS:
                         updateView();
+                        resetSquares();
+                        tiles[7 - moveFrom.y, 7 - moveFrom.x].Fill = Brushes.Green;
+                        tiles[7 - moveTo.y, 7 - moveTo.x].Fill = Brushes.Green;
                         state = BoardState.IDLE;
                         break;
                     case Result.ERROR_CHECK:
