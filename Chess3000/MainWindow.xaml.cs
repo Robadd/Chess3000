@@ -383,6 +383,8 @@ namespace Chess3000
             state = BoardState.IDLE;
             AufgabeBlack.IsEnabled = true;
             AufgabeWhite.IsEnabled = true;
+            player1.Text = "";
+            player2.Text = "";
         }
 
         private void GiveUpWhite(object sender, TouchEventArgs e)
