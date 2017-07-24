@@ -26,7 +26,10 @@ namespace Chess3000
         private ChessMaster master;
         private bool[,] AddedPieces = new bool[8,8];
         private Rectangle[,] tiles = new Rectangle[8, 8];
+        private Collection<TagVisualizationDefinition> TagDefs;
+
         public enum BoardState {
+            SETUP,
             FINE,
             WRONG_MOVE,
             ADDITIONAL_MOVE,
@@ -35,6 +38,8 @@ namespace Chess3000
         };
         private BoardState state;
         private Image rookImg;
+        private Pos moveFrom, moveTo;
+        private Piece movingPiece;
 
         public enum AdditionalMove{
             NONE,
@@ -58,6 +63,7 @@ namespace Chess3000
                     AddedPieces[x, y] = false;
                 }
             }
+            state = BoardState.SETUP;
         }
 
         private int AddedPiecesCount()
@@ -119,6 +125,8 @@ namespace Chess3000
             xView = (int)((Control)sender).GetValue(Grid.ColumnProperty);
             xMaster = 7 - xView;
             yMaster = 7 - yView;
+            moveTo = new Pos(yMaster, xMaster);
+            
         }
 
         private void VisRemovedPlay(object sender, TagVisualizerEventArgs e)
@@ -128,12 +136,16 @@ namespace Chess3000
             xView = (int)((Control)sender).GetValue(Grid.ColumnProperty);
             xMaster = 7 - xView;
             yMaster = 7 - yView;
-            Piece movingPiece = master.getPiece(new Pos(yMaster, xMaster));
-            if (state == BoardState.FINE)
+            moveFrom = new Pos(yMaster, xMaster);
+            movingPiece = master.getPiece(moveFrom);
+            if (state == BoardState.FINE) // start a new move
             {
-                if(movingPiece.Color == master.Drawing)
+                movingPiece = null;
+                moveTo = null;
+                if(movingPiece.Color == master.Drawing) // right start
                 {
-
+                    resetSquares();
+                    tiles[xView, yView].Fill = Brushes.LightGreen;
                 }
                 else
                 {
@@ -155,6 +167,75 @@ namespace Chess3000
             else if(state == BoardState.WRONG_MOVE)
             {
 
+            }
+        }
+
+        private void switchTagEvents(bool on)
+        {
+            if(state == BoardState.SETUP)
+            {
+                if(on)
+                {
+                    foreach (TagVisualizer tagvis in tvcollection)
+                    {
+                        tagvis.VisualizationAdded += VisAddedSetup;
+                        tagvis.VisualizationRemoved += VisRemovedSetup;
+                    }
+                }
+                else
+                {
+                    foreach (TagVisualizer tagvis in tvcollection)
+                    {
+                        tagvis.VisualizationAdded -= VisAddedSetup;
+                        tagvis.VisualizationRemoved -= VisRemovedSetup;
+                    }
+                }
+            }
+            else
+            {
+                if (on)
+                {
+                    foreach (TagVisualizer tagvis in tvcollection)
+                    {
+                        tagvis.VisualizationAdded += VisAddedPlay;
+                        tagvis.VisualizationRemoved += VisRemovedPlay;
+                    }
+                }
+                else
+                {
+                    foreach (TagVisualizer tagvis in tvcollection)
+                    {
+                        tagvis.VisualizationAdded -= VisAddedPlay;
+                        tagvis.VisualizationRemoved -= VisRemovedPlay;
+                    }
+                }
+            }
+        }
+
+        private void deactivateVisualizer(Color player)
+        {
+            switchTagEvents(false);
+            foreach(TagVisualizer tagvis in tvcollection)
+            {
+                Pos tagvispos = new Pos(7 - (int)tagvis.GetValue(Grid.ColumnProperty), 7 - (int)tagvis.GetValue(Grid.RowProperty));
+                if (master.getPositions(player).contains(tagvispos))
+                {
+
+                }
+                
+            }
+            
+        }
+
+        private void resetSquares()
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if ((i + j) % 2 == 0) tiles[i,j].Fill = new SolidColorBrush(Colors.Black);
+                    else tiles[i, j].Fill = new SolidColorBrush(Colors.White);
+                }
             }
         }
 
@@ -236,7 +317,7 @@ namespace Chess3000
             border.Stroke = Brushes.Black;
             border.StrokeThickness = 2;
             boardCanvas.Children.Add(border);
-            Collection<TagVisualizationDefinition> dc = CreateVisualizerDefinitions(32);
+            CreateVisualizerDefinitions();
             
             for (int i = 0; i < 8; i++)
             {
@@ -319,18 +400,26 @@ namespace Chess3000
             }
         }
 
-        private Collection<TagVisualizationDefinition> CreateVisualizerDefinitions(int count)
+        private void CreateVisualizerDefinitions()
         {
-            Collection<TagVisualizationDefinition> dc = new Collection<TagVisualizationDefinition>();
-            for (int i = 0; i < count; i++)
+            
+            for (int i = 0; i < 16; i++)
             {
                 TagVisualizationDefinition td = new TagVisualizationDefinition();
                 td.Source = null;
                 td.Value = 64 + i;
                 td.LostTagTimeout = 500;
-                dc.Add(td);
+                TagDefs.Add(td);
             }
-            return dc;
+            for (int i = 16; i < 32; i++)
+            {
+                TagVisualizationDefinition td = new TagVisualizationDefinition();
+                td.Source = null;
+                td.Value = 64 + i;
+                td.LostTagTimeout = 500;
+                TagDefs.Add(td);
+            }
+
         }
 
         private TagVisualizer CreateVisualizer(int x, int y, Collection<TagVisualizationDefinition> dc)
