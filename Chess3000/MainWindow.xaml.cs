@@ -359,8 +359,21 @@ namespace Chess3000
 
         private void bodgeBlackWhiteReset(Pos moveFrom)
         {
-            if ((moveFrom.x + moveFrom.y) % 2 == 0) tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.Black;
-            else tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.White;
+            if (moveFrom.Equals(master.LastFrom) || moveFrom.Equals(master.LastTo))
+            {
+                tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.Green;
+            }
+            else
+            {
+                if ((moveFrom.x + moveFrom.y) % 2 == 0)
+                {
+                    tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.Black;
+                }
+                else
+                {
+                    tiles[7 - moveFrom.x, 7 - moveFrom.y].Fill = Brushes.White;
+                }
+            }
         }
 
         private void AddNotationLabels()
