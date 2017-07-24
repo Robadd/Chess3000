@@ -220,11 +220,11 @@ namespace Chess3000
                 Pos tagvispos = new Pos(7 - (int)tagvis.GetValue(Grid.ColumnProperty), 7 - (int)tagvis.GetValue(Grid.RowProperty));
                 if (master.getPositions(player).contains(tagvispos))
                 {
-
+                    tagvis.IsEnabled = false;
                 }
                 
             }
-            
+            switchTagEvents(true);
         }
 
         private void resetSquares()
