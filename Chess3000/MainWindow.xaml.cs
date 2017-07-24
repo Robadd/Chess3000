@@ -261,9 +261,9 @@ namespace Chess3000
                     TouchRect.Fill = Brushes.Transparent;
                     TouchRect.SetValue(Grid.RowProperty, i);
                     TouchRect.SetValue(Grid.ColumnProperty, j);
-                    Grid.SetZIndex(TouchRect, 99);
                     TouchRect.TouchDown += TouchEvent;
-
+                    boardCanvas.Children.Add(TouchRect);
+                    Grid.SetZIndex(TouchRect, 99);
                     /*
                     TagVisualizer tv = CreateVisualizer(i, j, TagDefs);
                     tvcollection.Add(tv);
@@ -284,19 +284,24 @@ namespace Chess3000
         private void TouchEvent(object sender, TouchEventArgs e)
         {
             int xMaster, yMaster, xView, yView;
-            yView = (int)((Control)sender).GetValue(Grid.RowProperty);
-            xView = (int)((Control)sender).GetValue(Grid.ColumnProperty);
-            xMaster = 7 - xView;
-            yMaster = 7 - yView;
+            yView = (int)(sender as Rectangle).GetValue(Grid.RowProperty);
+            xView = (int)(sender as Rectangle).GetValue(Grid.ColumnProperty);
+            xMaster = 7 - yView;
+            yMaster = 7 - xView;
 
             if(state == BoardState.IDLE)
             {
                 moveFrom = new Pos(yMaster, xMaster);
+                state = BoardState.MOVE_PENDING;
             }
             else if(state == BoardState.MOVE_PENDING)
             {
                 moveTo = new Pos(yMaster, xMaster);
-                if(master.move(moveFrom, moveTo) == Result.SUCCESS) updateView();
+                if (master.move(moveFrom, moveTo) == Result.SUCCESS)
+                {
+                    updateView();
+                    state = BoardState.IDLE;
+                }
             }
         }
 
