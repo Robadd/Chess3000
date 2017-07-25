@@ -1,32 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Surface.Presentation.Controls;
-using System.IO;
 
 namespace Chess3000
 {
-    /// <summary>
-    /// Interaktionslogik für MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : SurfaceWindow
     {
         private ChessMaster master;
         private Rectangle[,] tiles = new Rectangle[8, 8];
-
-        public enum BoardState {
+        private enum BoardState {
             IDLE,
             MOVE_PENDING,
             CHECK,
@@ -103,60 +90,6 @@ namespace Chess3000
             }
         }
 
-        /*
-        private void VisAddedPlay(object sender, TagVisualizerEventArgs e)
-        {
-            int xMaster, yMaster, xView, yView;
-            yView = (int)((Control)sender).GetValue(Grid.RowProperty);
-            xView = (int)((Control)sender).GetValue(Grid.ColumnProperty);
-            xMaster = 7 - xView;
-            yMaster = 7 - yView;
-            moveTo = new Pos(yMaster, xMaster);
-            
-        }
-
-        private void VisRemovedPlay(object sender, TagVisualizerEventArgs e)
-        {
-            int xMaster, yMaster, xView, yView;
-            yView = (int)((Control)sender).GetValue(Grid.RowProperty);
-            xView = (int)((Control)sender).GetValue(Grid.ColumnProperty);
-            xMaster = 7 - xView;
-            yMaster = 7 - yView;
-            moveFrom = new Pos(yMaster, xMaster);
-            movingPiece = master.getPiece(moveFrom);
-            if (state == BoardState.FINE) // start a new move
-            {
-                movingPiece = null;
-                moveTo = null;
-                if(movingPiece.Color == master.Drawing) // right start
-                {
-                    resetSquares();
-                    tiles[xView, yView].Fill = Brushes.LightGreen;
-                }
-                else
-                {
-                    state = BoardState.WRONG_MOVE;
-                    if( master.Drawing == Color.Black)
-                    {
-
-                    }
-                    else if(master.Drawing == Color.White)
-                    {
-
-                    }
-                }
-            }
-            else if(state == BoardState.ADDITIONAL_MOVE)
-            {
-
-            }
-            else if(state == BoardState.WRONG_MOVE)
-            {
-
-            }
-        }
-        */
-      
         private void resetSquares()
         {
             for (int i = 0; i < 8; i++)
@@ -168,79 +101,7 @@ namespace Chess3000
                 }
             }
         }
-        /*
-        private void updateViewOld()
-        {
-            switch (state)
-            {
-                case BoardState.FINE:
-                    if(master.Drawing == Color.Black) player2.Text = player1.Text = "Schwarz ist am Zug";
-                    else player2.Text = player1.Text = "Weiß ist am Zug";
-                    break;
-                
-                case BoardState.WRONG_MOVE:
-
-                    break;
-                case BoardState.ADDITIONAL_MOVE:
-                    Pos rookPos = null;
-                    rookImg = null;
-                    if(additionalMove == AdditionalMove.CASTLING_WHITE_LONG)
-                    {
-                        rookPos = master.WHITE_ROOK_LONG_CASTLING_POS;
-                        rookImg = p70;
-                    }
-                    else if(additionalMove == AdditionalMove.CASTLING_WHITE_SHORT)
-                    {
-                        rookPos = master.WHITE_ROOK_SHORT_CASTLING_POS;
-                        rookImg = p70;
-                    }
-                    else if (additionalMove == AdditionalMove.CASTLING_BLACK_LONG)
-                    {
-                        rookPos = master.BLACK_ROOK_LONG_CASTLING_POS;
-                        rookImg = p00;
-                    }
-                    else if(additionalMove == AdditionalMove.CASTLING_BLACK_SHORT)
-                    {
-                        rookPos = master.BLACK_ROOK_SHORT_CASTLING_POS;
-                        rookImg = p00;
-                    }
-                    if(rookImg != null && rookPos != null)
-                    {
-                        rookImg.SetValue(Grid.RowProperty, 7 - rookPos.x);
-                        rookImg.SetValue(Grid.ColumnProperty, 7 - rookPos.y);
-                        rookImg.Visibility = Visibility.Visible;
-                    }
-                    
-                    break;
-                
-                case BoardState.CHECK:
-
-                    break;
-                
-                case BoardState.CHECKMATE:
-
-                    break;
-            }
-        }
         
-
-        private void StartGame(object sender, RoutedEventArgs e)
-        {
-            StartBtn.Visibility = Visibility.Hidden;
-            foreach (TagVisualizer tv in tvcollection)
-            {
-                tv.VisualizationAdded -= VisAddedSetup;
-                tv.VisualizationRemoved -= VisRemovedSetup;
-                tv.VisualizationAdded += VisAddedPlay;
-                tv.VisualizationRemoved += VisRemovedPlay;
-            }
-            state = BoardState.FINE;
-            additionalMove = AdditionalMove.NONE;
-        }
-        */
-
-        
-
         private void FillBoardWithSquares()
         {
             Rectangle border = new Rectangle();
@@ -251,7 +112,6 @@ namespace Chess3000
             border.Stroke = Brushes.Black;
             border.StrokeThickness = 2;
             boardCanvas.Children.Add(border);
-           // CreateVisualizerDefinitions();
             
             for (int i = 0; i < 8; i++)
             {
@@ -271,21 +131,13 @@ namespace Chess3000
                     TouchRect.TouchDown += TouchEvent;
                     boardCanvas.Children.Add(TouchRect);
                     Grid.SetZIndex(TouchRect, 99);
-                    /*
-                    TagVisualizer tv = CreateVisualizer(i, j, TagDefs);
-                    tvcollection.Add(tv);
-                    boardCanvas.Children.Add(tv);
-                    Grid.SetZIndex(tv, 99);
-                    */
+                   
                     tiles[i, j] = rect;
                     // Add to view
                     boardCanvas.Children.Add(rect);
                     Grid.SetZIndex(rect, 0);
-                    
                 }
             }
-            // Make Border of Chessboard
-            
         }
 
         private void TouchEvent(object sender, TouchEventArgs e)
@@ -301,7 +153,6 @@ namespace Chess3000
             {
                 moveFrom = new Pos(yMaster, xMaster);
                 state = BoardState.MOVE_PENDING;
-                //resetSquares();
                 tiles[yView, xView].Fill = Brushes.Orange;
             }
             else if(state == BoardState.MOVE_PENDING)
@@ -313,7 +164,6 @@ namespace Chess3000
                 if(moveFrom.Equals(moveTo))
                 {
                     state = BoardState.IDLE;
-                    //resetSquares();
                     bodgeBlackWhiteReset(moveFrom);
                     return;
                 }
@@ -420,100 +270,41 @@ namespace Chess3000
             else return;
         }
 
+        private TextBlock MakeNotationLabel(int rotate, int row, int coloumn, string text)
+        {
+            TextBlock label = new TextBlock();
+            label.Text = text;
+            label.Foreground = Brushes.Black;
+            label.SetValue(Grid.RowProperty, row);
+            label.SetValue(Grid.ColumnProperty, coloumn);
+            label.TextAlignment = TextAlignment.Center;
+            label.TextWrapping = TextWrapping.Wrap;
+            label.LayoutTransform = new RotateTransform(rotate);
+            return label;
+        }
+
         private void AddNotationLabels()
         {
             // A-Z WhitePlayer
             for(int i = 0; i < 8; i++)
             {
-                TextBlock label = new TextBlock();
-                label.Text = ((char)(65 + i)).ToString();
-                label.Foreground = Brushes.Black;
-                label.SetValue(Grid.RowProperty, 7 - i);
-                label.SetValue(Grid.ColumnProperty, 0);
-                label.TextAlignment = TextAlignment.Center;
-                label.TextWrapping = TextWrapping.Wrap;
-                label.LayoutTransform = new RotateTransform(-90);
-                LabelWhite.Children.Add(label);
+                LabelWhite.Children.Add(MakeNotationLabel(-90, 7 - i, 0, ((char)(65 + i)).ToString()));
             }
             // A-Z BlackPlayer
             for (int i = 0; i < 8; i++)
             {
-                TextBlock label = new TextBlock();
-                label.Text = ((char)(65 + (7 - i))).ToString();
-                label.Foreground = Brushes.Black;
-                label.SetValue(Grid.RowProperty,  i);
-                label.SetValue(Grid.ColumnProperty, 0);
-                label.TextAlignment = TextAlignment.Center;
-                label.TextWrapping = TextWrapping.Wrap;
-                label.LayoutTransform = new RotateTransform(90);
-                LabelBlack.Children.Add(label);
+                LabelBlack.Children.Add(MakeNotationLabel(90, i, 0, ((char)(65 + (7 - i))).ToString()));
             }
             // 1-8 Up
             for (int i = 0; i < 8; i++)
             {
-                TextBlock label = new TextBlock();
-                label.Text = (i+1).ToString();
-                label.Foreground = Brushes.Black;
-                label.SetValue(Grid.RowProperty, 0);
-                label.SetValue(Grid.ColumnProperty, 7-i);
-                label.TextAlignment = TextAlignment.Center;
-                label.TextWrapping = TextWrapping.Wrap;
-                label.LayoutTransform = new RotateTransform(90);
-                LabelRight.Children.Add(label);
+                LabelRight.Children.Add(MakeNotationLabel(90, 0, 7 - i, (i + 1).ToString()));
             }
             // 1-8 Down
             for (int i = 0; i < 8; i++)
             {
-                TextBlock label = new TextBlock();
-                label.Text = (i+1).ToString();
-                label.Foreground = Brushes.Black;
-                label.SetValue(Grid.RowProperty, 2);
-                label.SetValue(Grid.ColumnProperty, 7-i);
-                label.TextAlignment = TextAlignment.Center;
-                label.TextWrapping = TextWrapping.Wrap;
-                label.LayoutTransform = new RotateTransform(-90);
-                LabelLeft.Children.Add(label);
+                LabelLeft.Children.Add(MakeNotationLabel(-90, 2, 7 - i, (i + 1).ToString()));
             }
         }
-
-
-/*
-        private void CreateVisualizerDefinitions()
-        {
-            for (int i = 0; i < 16; i++)
-            {
-                TagVisualizationDefinition td = new TagVisualizationDefinition();
-                td.Source = null;
-                td.Value = 64 + i;
-                td.LostTagTimeout = 500;
-                TagDefs.Add(td);
-            }
-            for (int i = 16; i < 32; i++)
-            {
-                TagVisualizationDefinition td = new TagVisualizationDefinition();
-                td.Source = null;
-                td.Value = 64 + i;
-                td.LostTagTimeout = 500;
-                TagDefs.Add(td);
-            }
-
-        }
-
-        private TagVisualizer CreateVisualizer(int x, int y, Collection<TagVisualizationDefinition> dc)
-        {
-            TagVisualizer tv = new TagVisualizer();
-            tv.SetValue(Grid.RowProperty, x);
-            tv.SetValue(Grid.ColumnProperty, y);
-            tv.VerticalAlignment = VerticalAlignment.Stretch;
-            tv.HorizontalAlignment = HorizontalAlignment.Stretch;
-            tv.VisualizationAdded += VisAddedSetup;
-            tv.VisualizationRemoved += VisRemovedSetup;
-            foreach(TagVisualizationDefinition foo in dc)
-            {
-                tv.Definitions.Add(foo);
-            }
-            return tv;
-        }
-        */
     }  
 }
