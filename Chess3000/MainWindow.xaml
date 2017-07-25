@@ -20,7 +20,7 @@
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="10*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Row="1" Grid.Column="2" Name="boardCanvas" Margin="0,0,0,0"  SizeChanged="Board_SizeChanged">
+        <Grid Grid.Row="1" Grid.Column="2" Name="boardCanvas" Margin="0,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
@@ -41,27 +41,11 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
+
+
         </Grid>
-        <TextBlock Grid.Column="4" Text="White player" TextWrapping="Wrap" Name="player1" RenderTransformOrigin="0.5,0.5" Margin="0,0,-2,0" Grid.Row="1" TextAlignment="Center" >
-            <TextBlock.LayoutTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="-90"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </TextBlock.LayoutTransform>
-        </TextBlock>
-        <TextBlock Grid.Column="0" Text="Black player" TextWrapping="Wrap" Name="player2" RenderTransformOrigin="0.5,0.5" Margin="0" Grid.Row="1" TextAlignment="Center" >
-            <TextBlock.LayoutTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="90"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </TextBlock.LayoutTransform>
-        </TextBlock>
+
+
         <Grid Grid.Column="2" Name="LabelRight">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
@@ -109,6 +93,68 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
+        </Grid>
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Column="0" TextWrapping="Wrap" x:Name="player2" Foreground="Black" RenderTransformOrigin="0.5,0.5" Margin="0,0,-0.2,0" Grid.Row="0" TextAlignment="Left" FontSize="36" Grid.ColumnSpan="2">
+                <TextBlock.LayoutTransform>
+                    <TransformGroup>
+                        <RotateTransform Angle="90"/>
+                    </TransformGroup>
+                </TextBlock.LayoutTransform>
+            </TextBlock>
+            <Button x:Name="AufgabeBlack" Focusable="False" Content="Aufgeben" RenderTransformOrigin="0.5,0.5" FontSize="16" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="1" Margin="10,30,40,30" TouchDown="GiveUpBlack">
+                <Button.LayoutTransform>
+                    <TransformGroup>
+                        <RotateTransform Angle="90"/>
+                    </TransformGroup>
+                </Button.LayoutTransform>
+            </Button>
+            <Button x:Name="ResetBlack" Focusable="False" Content="Zurücksetzen" RenderTransformOrigin="0.5,0.5" FontSize="16" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="1" Margin="165,30,0,30" TouchDown="Reset">
+                <Button.LayoutTransform>
+                    <TransformGroup>
+                        <RotateTransform Angle="90"/>
+                    </TransformGroup>
+                </Button.LayoutTransform>
+            </Button>
+        </Grid>
+        <Grid Grid.Column="4" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Column="0" TextWrapping="Wrap" Name="player1" RenderTransformOrigin="0.5,0.5" TextAlignment="Left" Foreground="Black" FontSize="36" Grid.ColumnSpan="2" Margin="0,67,-0.2,0.2" Grid.RowSpan="2">
+                <TextBlock.LayoutTransform>
+                    <TransformGroup>
+                        <RotateTransform Angle="-90"/>
+                    </TransformGroup>
+                </TextBlock.LayoutTransform>
+            </TextBlock>
+            <Button x:Name="AufgabeWhite" Focusable="False" Content="Aufgeben" RenderTransformOrigin="0.5,0.5" FontSize="16" Grid.ColumnSpan="1" Margin="40,30,10,30" Grid.Column="0" TouchDown="GiveUpWhite">
+                <Button.LayoutTransform>
+                    <TransformGroup>
+                        <RotateTransform Angle="-90"/>
+                    </TransformGroup>
+                </Button.LayoutTransform>
+            </Button>
+            <Button x:Name="ResetWhite" Focusable="False" TouchDown="Reset" Content="Zurücksetzen" RenderTransformOrigin="0.5,0.5" FontSize="16" Grid.ColumnSpan="1" Margin="0,30,165,30" Grid.Column="1">
+                <Button.LayoutTransform>
+                    <TransformGroup>
+                        <RotateTransform Angle="-90"/>
+                    </TransformGroup>
+                </Button.LayoutTransform>
+            </Button>
         </Grid>
     </Grid>
 
